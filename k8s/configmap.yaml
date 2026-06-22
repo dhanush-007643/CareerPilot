@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: careerpilot-config
+  namespace: careerpilot
+data:
+  PORT: "5001"
+  FRONTEND_URL: "http://careerpilot.local"
