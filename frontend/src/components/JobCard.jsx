@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Tag, Send, CheckCircle2, UserCheck, AlertCircle } from 'lucide-react';
-import axios from 'axios';
+import { Tag, Send, CheckCircle2, UserCheck, AlertCircle, Eye, EyeOff } from 'lucide-react';
+import api from '../services/api';
 
 const JobCard = ({ job, onApplySuccess }) => {
   const { user } = useAuth();
@@ -9,6 +9,7 @@ const JobCard = ({ job, onApplySuccess }) => {
   const [referralCode, setReferralCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [applicationVisibility, setApplicationVisibility] = useState('public');
 
   // Check if current user is a fresher and has already applied to this job
   const hasApplied = user && job.applicants?.some(
@@ -24,10 +25,11 @@ const JobCard = ({ job, onApplySuccess }) => {
     setError('');
 
     try {
-      const res = await axios.post('/api/jobs/apply', {
+      const res = await api.post('/jobs/apply', {
         jobId: job._id,
         userId: user._id,
-        referralCode: referralCode.trim()
+        referralCode: referralCode.trim(),
+        applicationVisibility
       });
 
       if (res.data.success) {
@@ -164,6 +166,57 @@ const JobCard = ({ job, onApplySuccess }) => {
                   class="w-full px-4 py-2 text-sm rounded-lg glow-input text-white"
                   disabled={loading}
                 />
+              </div>
+
+              <div class="space-y-3 pt-2">
+                <label class="block text-xs font-semibold text-textSecondary uppercase tracking-wider">
+                  Application Visibility
+                </label>
+                <div class="grid grid-cols-1 gap-3">
+                  {/* Public Option */}
+                  <div
+                    onClick={() => setApplicationVisibility('public')}
+                    className={`cursor-pointer rounded-xl border p-4 flex items-start gap-3 transition-all ${
+                      applicationVisibility === 'public'
+                        ? 'bg-cyan-500/10 border-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.15)] ring-1 ring-cyan-500'
+                        : 'bg-slate-900 border-white/5 hover:border-white/10'
+                    }`}
+                  >
+                    <div className={`mt-0.5 ${applicationVisibility === 'public' ? 'text-amber-400' : 'text-slate-500'}`}>
+                      <Eye size={18} />
+                    </div>
+                    <div>
+                      <h4 className={`text-sm font-bold ${applicationVisibility === 'public' ? 'text-amber-400' : 'text-slate-300'}`}>
+                        Public Application
+                      </h4>
+                      <p className="text-xs text-slate-500 mt-1">
+                        Boost my exposure to all Startups.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Private Option */}
+                  <div
+                    onClick={() => setApplicationVisibility('private')}
+                    className={`cursor-pointer rounded-xl border p-4 flex items-start gap-3 transition-all ${
+                      applicationVisibility === 'private'
+                        ? 'bg-cyan-500/10 border-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.15)] ring-1 ring-cyan-500'
+                        : 'bg-slate-900 border-white/5 hover:border-white/10'
+                    }`}
+                  >
+                    <div className={`mt-0.5 ${applicationVisibility === 'private' ? 'text-amber-400' : 'text-slate-500'}`}>
+                      <EyeOff size={18} />
+                    </div>
+                    <div>
+                      <h4 className={`text-sm font-bold ${applicationVisibility === 'private' ? 'text-amber-400' : 'text-slate-300'}`}>
+                        Private Application
+                      </h4>
+                      <p className="text-xs text-slate-500 mt-1">
+                        Keep my profile hidden from other recruiters.
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div class="flex space-x-3 justify-end pt-2">

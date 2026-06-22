@@ -1,0 +1,558 @@
+{
+  "timestamp": "2026-06-22T14:51:04.693Z",
+  "metadata": {
+    "users": 7,
+    "jobs": 2,
+    "applications": 2,
+    "quizzes": 3,
+    "scores": 2,
+    "notifications": 0
+  },
+  "collections": {
+    "users": [
+      {
+        "personalInfo": {
+          "headline": "",
+          "phone": "+1 (555) 999-0000",
+          "bio": "Super Administrator account for overseeing recruiter pipelines and fresher job updates.",
+          "location": "CareerPilot HQ"
+        },
+        "resume": {
+          "fileName": "",
+          "fileContent": "",
+          "fileUrl": "",
+          "uploadedAt": "2026-06-21T17:18:07.764Z"
+        },
+        "_id": "6a381ccf3122b2a89a622e0c",
+        "name": "CareerPilot Administrator",
+        "email": "admin@example.com",
+        "password": "$2a$10$fmDJ55w92aESKyk6cQepReI/7vXoz2rHgDJsnwc7B9v5K35AqIrDK",
+        "role": "admin",
+        "visibility": "public",
+        "companyVisibility": "public",
+        "companyId": null,
+        "companyRole": null,
+        "skills": [],
+        "followingCompanies": [],
+        "educationDetails": [],
+        "experienceDetails": [],
+        "createdAt": "2026-06-21T17:18:07.765Z",
+        "updatedAt": "2026-06-21T17:18:07.765Z",
+        "__v": 0,
+        "projects": [],
+        "certificates": []
+      },
+      {
+        "personalInfo": {
+          "headline": "",
+          "phone": "+44 20 7600 0000",
+          "bio": "HR Manager at Google DeepMind.",
+          "location": "London, UK / Remote"
+        },
+        "resume": {
+          "fileName": "",
+          "fileContent": "",
+          "fileUrl": "",
+          "uploadedAt": "2026-06-21T17:18:07.899Z"
+        },
+        "_id": "6a381ccf3122b2a89a622e0e",
+        "name": "DeepMind HR",
+        "email": "startup@example.com",
+        "password": "$2a$10$LBTYqOMzp2moDatpW3PLKOIFWM/6n52p1Xeh9n.7zsscOEkixVh96",
+        "role": "startup",
+        "visibility": "public",
+        "companyVisibility": "public",
+        "companyId": "6a381cd03122b2a89a622e10",
+        "companyRole": "Admin",
+        "skills": [],
+        "followingCompanies": [],
+        "educationDetails": [],
+        "experienceDetails": [],
+        "createdAt": "2026-06-21T17:18:07.900Z",
+        "updatedAt": "2026-06-21T17:18:08.027Z",
+        "__v": 0,
+        "projects": [],
+        "certificates": []
+      },
+      {
+        "personalInfo": {
+          "headline": "",
+          "phone": "+1 (555) 123-4567",
+          "bio": "Enthusiastic full-stack web developer passionate about AI integrations and MERN web applications.",
+          "location": "San Francisco, CA"
+        },
+        "resume": {
+          "fileName": "",
+          "fileContent": "",
+          "fileUrl": "",
+          "uploadedAt": "2026-06-21T17:18:08.032Z"
+        },
+        "_id": "6a381cd03122b2a89a622e13",
+        "name": "Alex Mercer",
+        "email": "fresher@example.com",
+        "password": "$2a$10$BjyxWAnSOOtZfBKW3YLFc.8scqeCzUd1Tn7kG8CxzFRQ/9nEM8iZq",
+        "role": "fresher",
+        "visibility": "public",
+        "companyVisibility": "public",
+        "companyId": null,
+        "companyRole": null,
+        "skills": [
+          "React.js",
+          "Node.js",
+          "Express",
+          "Tailwind CSS",
+          "JavaScript",
+          "MongoDB"
+        ],
+        "educationDetails": [
+          {
+            "school": "Stanford University",
+            "degree": "Bachelor of Science",
+            "fieldOfStudy": "Computer Science",
+            "startYear": "2022",
+            "endYear": "2026",
+            "_id": "6a381cd03122b2a89a622e14"
+          }
+        ],
+        "experienceDetails": [
+          {
+            "title": "Frontend Intern",
+            "company": "AI Solutions Inc.",
+            "location": "Remote",
+            "startDate": "June 2025",
+            "endDate": "August 2025",
+            "description": "Developed and optimized client-facing dashboards using React and CSS Grid.",
+            "_id": "6a381cd03122b2a89a622e15"
+          }
+        ],
+        "followingCompanies": [],
+        "createdAt": "2026-06-21T17:18:08.034Z",
+        "updatedAt": "2026-06-21T17:18:08.034Z",
+        "__v": 0,
+        "projects": [],
+        "certificates": []
+      },
+      {
+        "personalInfo": {
+          "headline": "",
+          "phone": "",
+          "bio": "",
+          "location": ""
+        },
+        "resume": {
+          "fileName": "",
+          "fileContent": "",
+          "fileUrl": "",
+          "uploadedAt": "2026-06-21T19:39:51.143Z"
+        },
+        "_id": "6a383e07fa370c1c4553adab",
+        "name": "dhanush",
+        "email": "192421162.simats@saveetha.com",
+        "password": "$2a$10$jmt1VpPZjaH1NG3MpTLvK.S8UfhND2e5ULQMUc.rGWPk1WVfJsvq.",
+        "role": "startup",
+        "visibility": "public",
+        "companyVisibility": "public",
+        "companyId": null,
+        "companyRole": null,
+        "skills": [],
+        "followingCompanies": [],
+        "educationDetails": [],
+        "experienceDetails": [],
+        "createdAt": "2026-06-21T19:39:51.155Z",
+        "updatedAt": "2026-06-21T19:39:51.155Z",
+        "__v": 0,
+        "projects": [],
+        "certificates": []
+      },
+      {
+        "personalInfo": {
+          "headline": "",
+          "phone": "",
+          "bio": "",
+          "location": ""
+        },
+        "resume": {
+          "fileName": "",
+          "fileContent": "",
+          "fileUrl": "",
+          "uploadedAt": "2026-06-21T20:10:29.906Z"
+        },
+        "_id": "6a384535a6000255725ec3b0",
+        "name": "Dhaanush",
+        "email": "raarthi04@gmail.com",
+        "password": "$2a$10$Tjlwdlg8zFV7ToXDJlUSBOFGlD2mdv7aSKFgEgGqrouv6KRAHCOcK",
+        "role": "fresher",
+        "visibility": "public",
+        "companyVisibility": "public",
+        "companyId": null,
+        "companyRole": null,
+        "skills": [],
+        "followingCompanies": [],
+        "educationDetails": [],
+        "experienceDetails": [],
+        "createdAt": "2026-06-21T20:10:29.909Z",
+        "updatedAt": "2026-06-21T20:10:29.909Z",
+        "__v": 0,
+        "projects": [],
+        "certificates": []
+      },
+      {
+        "personalInfo": {
+          "phone": "",
+          "bio": "",
+          "location": "",
+          "headline": ""
+        },
+        "resume": {
+          "fileName": "",
+          "fileContent": "",
+          "fileUrl": "",
+          "uploadedAt": "2026-06-21T20:20:40.837Z"
+        },
+        "_id": "6a384798d13a15da01d72642",
+        "name": "Dhaanush",
+        "email": "raathi04@gmail.com",
+        "password": "$2a$10$11gn9BayvEknau1zB1a7ge.NTjLO3Te2xL2MF7xj0Vc8ZwP2vCG8q",
+        "role": "fresher",
+        "visibility": "public",
+        "companyVisibility": "public",
+        "companyId": null,
+        "companyRole": null,
+        "skills": [
+          "Node.js"
+        ],
+        "followingCompanies": [],
+        "educationDetails": [],
+        "experienceDetails": [],
+        "createdAt": "2026-06-21T20:20:40.840Z",
+        "updatedAt": "2026-06-21T20:20:40.840Z",
+        "__v": 0,
+        "projects": [],
+        "certificates": []
+      },
+      {
+        "personalInfo": {
+          "phone": "",
+          "bio": "",
+          "location": "",
+          "headline": ""
+        },
+        "resume": {
+          "fileName": "",
+          "fileContent": "",
+          "fileUrl": "",
+          "uploadedAt": "2026-06-21T20:28:44.368Z"
+        },
+        "_id": "6a38497c8c6f75b42359ae32",
+        "name": "Harissh",
+        "email": "192424014.simats@saveetha.com",
+        "password": "$2a$10$ZIPl/n6E6mEka2D959n5zOPUCMJV8HpiJyQMzrOFWfzPIUJY6VOCG",
+        "role": "fresher",
+        "visibility": "public",
+        "companyVisibility": "public",
+        "companyId": null,
+        "companyRole": null,
+        "skills": [],
+        "educationDetails": [],
+        "experienceDetails": [],
+        "projects": [],
+        "certificates": [],
+        "followingCompanies": [],
+        "createdAt": "2026-06-21T20:28:44.381Z",
+        "updatedAt": "2026-06-21T20:28:44.381Z",
+        "__v": 0
+      }
+    ],
+    "jobs": [
+      {
+        "_id": "6a381cd03122b2a89a622e1b",
+        "companyId": "6a381cd03122b2a89a622e10",
+        "title": "Full Stack Engineer (MERN)",
+        "description": "We are seeking an outstanding Full Stack Engineer to help build our Next-Generation Research platforms. You will design, develop, and integrate user interfaces with complex backends.",
+        "requiredSkills": [
+          "React.js",
+          "Node.js",
+          "Express",
+          "Tailwind CSS"
+        ],
+        "isWFH": true,
+        "jobType": "Full-Time",
+        "hasStipend": false,
+        "location": "Remote / London",
+        "salary": "$120,000 - $145,000",
+        "experience": "Freshers welcome",
+        "domain": "Software Engineering",
+        "company": "Google DeepMind",
+        "jobVisibility": "public",
+        "inviteCode": null,
+        "invitedCandidates": [],
+        "applicants": [
+          {
+            "userId": "6a381cd03122b2a89a622e13",
+            "referralCode": "DEEPMIND-CAMPUS-99",
+            "_id": "6a381cd03122b2a89a622e21",
+            "appliedAt": "2026-06-21T17:18:08.180Z"
+          }
+        ],
+        "createdAt": "2026-06-21T17:18:08.169Z",
+        "updatedAt": "2026-06-21T17:18:08.181Z",
+        "__v": 1
+      },
+      {
+        "_id": "6a381cd03122b2a89a622e1c",
+        "companyId": "6a381cd03122b2a89a622e10",
+        "title": "React UI Developer",
+        "description": "Help build premium user interfaces with modern glassmorphism design, advanced tailwind themes, and custom animations.",
+        "requiredSkills": [
+          "React.js",
+          "Tailwind CSS",
+          "JavaScript"
+        ],
+        "isWFH": false,
+        "jobType": "Internship",
+        "hasStipend": true,
+        "location": "London, UK",
+        "salary": "£3,500 / month",
+        "experience": "Freshers welcome",
+        "domain": "UI/UX Design",
+        "company": "Google DeepMind",
+        "jobVisibility": "public",
+        "inviteCode": null,
+        "invitedCandidates": [],
+        "applicants": [
+          {
+            "userId": "6a381cd03122b2a89a622e13",
+            "referralCode": "",
+            "_id": "6a381cd03122b2a89a622e25",
+            "appliedAt": "2026-06-21T17:18:08.188Z"
+          }
+        ],
+        "createdAt": "2026-06-21T17:18:08.169Z",
+        "updatedAt": "2026-06-21T17:18:08.189Z",
+        "__v": 1
+      }
+    ],
+    "applications": [
+      {
+        "resume": {
+          "fileName": "alex_mercer_resume.pdf",
+          "fileContent": "Mock base64 PDF resume content",
+          "fileUrl": "https://careerpilot.s3.amazonaws.com/resumes/alex_mercer.pdf"
+        },
+        "interview": {
+          "format": "Virtual",
+          "link": "",
+          "notes": ""
+        },
+        "_id": "6a381cd03122b2a89a622e1f",
+        "userId": "6a381cd03122b2a89a622e13",
+        "jobId": "6a381cd03122b2a89a622e1b",
+        "referralCode": "DEEPMIND-CAMPUS-99",
+        "applicationVisibility": "public",
+        "matchPercentage": 100,
+        "status": "New",
+        "coverLetter": "I am highly passionate about Artificial Intelligence and web application interfaces. I have build several full stack projects and solved complex challenges in your training arena.",
+        "createdAt": "2026-06-21T17:18:08.176Z",
+        "updatedAt": "2026-06-21T17:18:08.176Z",
+        "__v": 0
+      },
+      {
+        "resume": {
+          "fileName": "alex_mercer_resume.pdf",
+          "fileContent": "Mock base64 PDF resume content",
+          "fileUrl": "https://careerpilot.s3.amazonaws.com/resumes/alex_mercer.pdf"
+        },
+        "interview": {
+          "dateTime": "2026-06-23T17:18:08.184Z",
+          "format": "Virtual",
+          "link": "https://meet.google.com/abc-defg-hij",
+          "notes": "Technical panel interview on React styling, animations and layouts."
+        },
+        "_id": "6a381cd03122b2a89a622e23",
+        "userId": "6a381cd03122b2a89a622e13",
+        "jobId": "6a381cd03122b2a89a622e1c",
+        "referralCode": "",
+        "applicationVisibility": "public",
+        "matchPercentage": 100,
+        "status": "Interviewing",
+        "coverLetter": "Vibrant colors, glassmorphic UI, and smooth animations are my expertise. I would love to build top-tier frontends for your research group.",
+        "createdAt": "2026-06-21T17:18:08.185Z",
+        "updatedAt": "2026-06-21T17:18:08.185Z",
+        "__v": 0
+      }
+    ],
+    "quizzes": [
+      {
+        "_id": "6a381ccf3122b2a89a622dfb",
+        "title": "React.js Fundamentals",
+        "questions": [
+          {
+            "questionText": "Which React hook is used to manage component state?",
+            "options": [
+              "useEffect",
+              "useState",
+              "useContext",
+              "useRef"
+            ],
+            "correctAnswer": "useState",
+            "_id": "6a381ccf3122b2a89a622dfc"
+          },
+          {
+            "questionText": "What is the correct way to pass data from a parent to a child component?",
+            "options": [
+              "Using state",
+              "Using props",
+              "Using Redux",
+              "Using localStorage"
+            ],
+            "correctAnswer": "Using props",
+            "_id": "6a381ccf3122b2a89a622dfd"
+          },
+          {
+            "questionText": "Which lifecycle event does useEffect with an empty dependency array [] emulate?",
+            "options": [
+              "componentDidMount",
+              "componentDidUpdate",
+              "componentWillUnmount",
+              "render"
+            ],
+            "correctAnswer": "componentDidMount",
+            "_id": "6a381ccf3122b2a89a622dfe"
+          },
+          {
+            "questionText": "What does JSX stand for?",
+            "options": [
+              "JavaScript Extension",
+              "JavaScript XML",
+              "Java Syntax Extension",
+              "JSON XML"
+            ],
+            "correctAnswer": "JavaScript XML",
+            "_id": "6a381ccf3122b2a89a622dff"
+          }
+        ],
+        "createdAt": "2026-06-21T17:18:07.755Z",
+        "updatedAt": "2026-06-21T17:18:07.755Z",
+        "__v": 0
+      },
+      {
+        "_id": "6a381ccf3122b2a89a622e00",
+        "title": "Node.js & Express Essentials",
+        "questions": [
+          {
+            "questionText": "Which built-in Node.js module handles file operations?",
+            "options": [
+              "path",
+              "http",
+              "fs",
+              "os"
+            ],
+            "correctAnswer": "fs",
+            "_id": "6a381ccf3122b2a89a622e01"
+          },
+          {
+            "questionText": "What does the app.use() function do in an Express application?",
+            "options": [
+              "Binds middleware to the application instance",
+              "Serves static pages only",
+              "Defines a specific database connection",
+              "Exits the application process"
+            ],
+            "correctAnswer": "Binds middleware to the application instance",
+            "_id": "6a381ccf3122b2a89a622e02"
+          },
+          {
+            "questionText": "Which Express route parameter definition parses a path variable named \"id\"?",
+            "options": [
+              "/users/:id",
+              "/users/?id",
+              "/users/{id}",
+              "/users/id"
+            ],
+            "correctAnswer": "/users/:id",
+            "_id": "6a381ccf3122b2a89a622e03"
+          },
+          {
+            "questionText": "What is NPM?",
+            "options": [
+              "Node Project Manager",
+              "Node Package Manager",
+              "New Package Module",
+              "Network Protocol Manager"
+            ],
+            "correctAnswer": "Node Package Manager",
+            "_id": "6a381ccf3122b2a89a622e04"
+          }
+        ],
+        "createdAt": "2026-06-21T17:18:07.756Z",
+        "updatedAt": "2026-06-21T17:18:07.756Z",
+        "__v": 0
+      },
+      {
+        "_id": "6a381ccf3122b2a89a622e05",
+        "title": "Modern CSS & Tailwind CSS",
+        "questions": [
+          {
+            "questionText": "How do you apply custom colors or fonts in a Tailwind CSS project?",
+            "options": [
+              "Modify tailwind.config.js",
+              "Edit index.html directly",
+              "Override styles in global.css with !important",
+              "Tailwind does not support custom styles"
+            ],
+            "correctAnswer": "Modify tailwind.config.js",
+            "_id": "6a381ccf3122b2a89a622e06"
+          },
+          {
+            "questionText": "Which Tailwind utility class is used to make a container a flexbox?",
+            "options": [
+              "flex-container",
+              "display-flex",
+              "flex",
+              "layout-flex"
+            ],
+            "correctAnswer": "flex",
+            "_id": "6a381ccf3122b2a89a622e07"
+          },
+          {
+            "questionText": "What does the class \"md:grid-cols-3\" mean in Tailwind CSS?",
+            "options": [
+              "The grid has 3 columns on medium screens and larger",
+              "The grid has 3 columns on mobile screens only",
+              "The grid has 3 rows on medium screens and larger",
+              "Grid column widths are multiplied by 3"
+            ],
+            "correctAnswer": "The grid has 3 columns on medium screens and larger",
+            "_id": "6a381ccf3122b2a89a622e08"
+          }
+        ],
+        "createdAt": "2026-06-21T17:18:07.756Z",
+        "updatedAt": "2026-06-21T17:18:07.756Z",
+        "__v": 0
+      }
+    ],
+    "scores": [
+      {
+        "_id": "6a381cd03122b2a89a622e17",
+        "userId": "6a381cd03122b2a89a622e13",
+        "quizId": "6a381ccf3122b2a89a622dfb",
+        "score": 95,
+        "certificateUrl": "mock_certificate_for_6a381ccf3122b2a89a622dfb",
+        "createdAt": "2026-06-21T17:18:08.163Z",
+        "updatedAt": "2026-06-21T17:18:08.163Z",
+        "__v": 0
+      },
+      {
+        "_id": "6a381cd03122b2a89a622e18",
+        "userId": "6a381cd03122b2a89a622e13",
+        "quizId": "6a381ccf3122b2a89a622e00",
+        "score": 90,
+        "certificateUrl": "mock_certificate_for_6a381ccf3122b2a89a622e00",
+        "createdAt": "2026-06-21T17:18:08.163Z",
+        "updatedAt": "2026-06-21T17:18:08.163Z",
+        "__v": 0
+      }
+    ],
+    "notifications": []
+  }
+}

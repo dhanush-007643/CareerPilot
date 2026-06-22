@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Job = require('../models/Job');
+const User = require('../models/User');
+const sendEmail = require('../utils/email');
 const { protect, authorize } = require('../middleware/auth');
 
 // @desc    Create a job posting (Startups only)
@@ -46,6 +48,16 @@ router.get('/', protect, async (req, res) => {
   }
 });
 
+// @desc    Get all jobs the user has been invited to
+// @route   GET /api/jobs/my-invitations
+// @access  Private (Fresher only)
+router.get('/my-invitations', protect, authorize('fresher'), require('../controllers/jobController').getMyInvitations);
+
+// @desc    Invite a candidate to a private job
+// @route   POST /api/jobs/invite
+// @access  Private (Startup only)
+router.post('/invite', protect, authorize('startup'), require('../controllers/jobController').inviteCandidate);
+
 // @desc    Apply for a job
 // @route   POST /api/jobs/apply
 // @access  Private (Fresher only)
@@ -75,13 +87,35 @@ router.post('/apply', protect, authorize('fresher'), async (req, res) => {
       return res.status(400).json({ success: false, message: 'You have already applied for this job' });
     }
 
-    // Add user to applicants list
     job.applicants.push({
       userId: applicantId,
       referralCode: referralCode || ''
     });
 
     await job.save();
+
+    try {
+      const user = await User.findById(applicantId);
+      const startup = await User.findById(job.startupId);
+
+      if (user && user.email) {
+        await sendEmail({
+          email: user.email,
+          subject: `Application Submitted: ${job.title}`,
+          message: `Hi ${user.name},\n\nYour application for the position of ${job.title} at ${startup ? startup.name : 'the company'} has been successfully submitted.\n\nGood luck!\nCareerPilot Team`
+        });
+      }
+
+      if (startup && startup.email) {
+        await sendEmail({
+          email: startup.email,
+          subject: `New Applicant for ${job.title}`,
+          message: `Hello ${startup.name},\n\nYou have a new applicant (${user ? user.name : 'a candidate'}) for the position of ${job.title}.\n\nLog in to your dashboard to review their profile.\n\nCareerPilot Team`
+        });
+      }
+    } catch (emailErr) {
+      console.error('Failed to send application emails:', emailErr);
+    }
 
     return res.json({ success: true, message: 'Application submitted successfully', data: job });
   } catch (error) {

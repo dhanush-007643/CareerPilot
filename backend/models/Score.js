@@ -14,6 +14,10 @@ const scoreSchema = new mongoose.Schema({
   score: {
     type: Number,
     required: [true, 'Please add a score']
+  },
+  certificateUrl: {
+    type: String,
+    default: ''
   }
 }, {
   timestamps: true

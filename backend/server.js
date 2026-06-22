@@ -1,6 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const path = require('path');
+const http = require('http');
+const { Server } = require('socket.io');
 const connectDB = require('./config/db');
 const Quiz = require('./models/Quiz');
 
@@ -11,22 +14,109 @@ dotenv.config();
 connectDB().then(() => {
   // Seed initial quizzes if db is empty
   seedQuizzes();
+  // Seed full database if empty
+  seedFullDatabaseIfEmpty();
 });
 
+// Custom Security Middlewares (NFRs: Security & Protection against SQL/NoSQL Injection and XSS)
+const mongoSanitize = (req, res, next) => {
+  const sanitizeObj = (obj) => {
+    if (obj && typeof obj === 'object') {
+      for (const key in obj) {
+        if (key.startsWith('$')) {
+          delete obj[key];
+        } else {
+          sanitizeObj(obj[key]);
+        }
+      }
+    }
+  };
+  sanitizeObj(req.body);
+  sanitizeObj(req.query);
+  sanitizeObj(req.params);
+  next();
+};
+
+const securityHeaders = (req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Referrer-Policy', 'no-referrer');
+  next();
+};
+
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
+  }
+});
+
+// Make io accessible to routers
+app.set('io', io);
+
+io.on('connection', (socket) => {
+  console.log('User connected to socket:', socket.id);
+  
+  socket.on('join_room', (userId) => {
+    socket.join(userId);
+  });
+
+  socket.on('send_message', (data) => {
+    io.to(data.receiverId).emit('receive_message', data);
+    if (data.senderId) {
+      io.to(data.senderId).emit('receive_message', data);
+    }
+  });
+
+  socket.on('typing', (data) => {
+    io.to(data.receiverId).emit('typing', data);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('User disconnected:', socket.id);
+  });
+});
 
 // Middleware
+app.use(securityHeaders);
+app.use(mongoSanitize);
 app.use(cors({
   origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
   credentials: true
 }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
-app.use('/api/jobs', require('./routes/jobs'));
+app.use('/api', require('./routes/api'));
 app.use('/api/quizzes', require('./routes/quizzes'));
+app.use('/api/analytics', require('./routes/analytics'));
+app.use('/api/reports', require('./routes/reports'));
+app.use('/api/settings', require('./routes/settings'));
+app.use('/api/notifications', require('./routes/notifications'));
+app.use('/api/interviews', require('./routes/interviews'));
+app.use('/api/messages', require('./routes/messages'));
+app.use('/api/feedback', require('./routes/feedback'));
+app.use('/api/support-chat', require('./routes/supportChat'));
+app.use('/api/followers', require('./routes/followers'));
+app.use('/api/invitations', require('./routes/invitations'));
+
+// Trigger automated backup on startup
+setTimeout(async () => {
+  try {
+    const { runBackup } = require('./scripts/backup');
+    await runBackup();
+    console.log('Automated database startup backup succeeded.');
+  } catch (err) {
+    console.error('Automated startup backup failed:', err.message);
+  }
+}, 5000);
 
 // Welcome route
 app.get('/', (req, res) => {
@@ -46,7 +136,7 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running in development mode on port ${PORT}`);
 });
 
@@ -156,5 +246,23 @@ async function seedQuizzes() {
     console.log('Successfully seeded database with 3 technical quizzes.');
   } catch (error) {
     console.error('Error seeding quizzes:', error);
+  }
+}
+
+// Automatically seed users, jobs, applications, quizzes, scores if no users are in DB
+async function seedFullDatabaseIfEmpty() {
+  try {
+    const User = require('./models/User');
+    const userCount = await User.countDocuments();
+    if (userCount === 0) {
+      console.log('No user accounts found in MongoDB. Automatically seeding initial demo data...');
+      const { runSeeder } = require('./utils/seeder');
+      await runSeeder();
+      console.log('Initial demo database seeded successfully with Startup (Google DeepMind) and Fresher (Alex Mercer) records!');
+    } else {
+      console.log('Users already exist in MongoDB. Skipping database auto-seeding.');
+    }
+  } catch (error) {
+    console.error('Failed to run automatic database seeder:', error);
   }
 }

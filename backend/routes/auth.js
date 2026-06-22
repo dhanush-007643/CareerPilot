@@ -1,8 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const User = require('../models/User');
+const Admin = require('../models/Admin');
 const { protect } = require('../middleware/auth');
+const emailService = require('../services/emailService');
 
 // Generate JWT token helper
 const generateToken = (id) => {
@@ -16,7 +19,7 @@ const generateToken = (id) => {
 // @access  Public
 router.post('/register', async (req, res) => {
   try {
-    const { name, email, password, role, skills } = req.body;
+    const { name, email, password, role, skills, personalInfo, educationDetails, experienceDetails, projects, certificates } = req.body;
 
     // Validate request
     if (!name || !email || !password) {
@@ -35,7 +38,12 @@ router.post('/register', async (req, res) => {
       email,
       password,
       role: role || 'fresher',
-      skills: skills || []
+      skills: skills || [],
+      personalInfo: personalInfo || {},
+      educationDetails: educationDetails || [],
+      experienceDetails: experienceDetails || [],
+      projects: projects || [],
+      certificates: certificates || []
     });
 
     if (user) {
@@ -46,6 +54,12 @@ router.post('/register', async (req, res) => {
         email: user.email,
         role: user.role,
         skills: user.skills,
+        location: user.personalInfo?.location,
+        phone: user.personalInfo?.phone,
+        headline: user.personalInfo?.headline,
+        visibility: user.visibility,
+        companyId: user.companyId,
+        companyRole: user.companyRole,
         token: generateToken(user._id)
       });
     } else {
@@ -70,7 +84,15 @@ router.post('/login', async (req, res) => {
     }
 
     // Check for user
-    const user = await User.findOne({ email });
+    let user = await User.findOne({ email }).select('+password');
+    let isAdmin = false;
+
+    if (!user) {
+      // Fallback to Admin model
+      user = await Admin.findOne({ email }).select('+password');
+      isAdmin = true;
+    }
+
     if (!user) {
       return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
@@ -81,6 +103,11 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
 
+    if (isAdmin) {
+      user.lastLogin = Date.now();
+      await user.save({ validateBeforeSave: false });
+    }
+
     return res.json({
       success: true,
       _id: user._id,
@@ -88,6 +115,12 @@ router.post('/login', async (req, res) => {
       email: user.email,
       role: user.role,
       skills: user.skills,
+      location: user.personalInfo?.location,
+      phone: user.personalInfo?.phone,
+      headline: user.personalInfo?.headline,
+      visibility: user.visibility,
+      companyId: user.companyId,
+      companyRole: user.companyRole,
       token: generateToken(user._id)
     });
   } catch (error) {
@@ -101,11 +134,165 @@ router.post('/login', async (req, res) => {
 // @access  Private
 router.get('/me', protect, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select('-password');
+    const userDoc = await User.findById(req.user.id).select('-password');
+    if (!userDoc) return res.status(404).json({ success: false, message: 'User not found' });
+    
+    // Format user for frontend compatibility
+    const user = userDoc.toObject();
+    user.location = user.personalInfo?.location;
+    user.phone = user.personalInfo?.phone;
+    user.headline = user.personalInfo?.headline;
+    
     return res.json({ success: true, user });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// @desc    Update user profile details
+// @route   PUT /api/auth/profile
+// @access  Private
+router.put('/profile', protect, async (req, res) => {
+  try {
+    const { personalInfo, educationDetails, experienceDetails, skills, projects, certificates, visibility } = req.body;
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    if (personalInfo) user.personalInfo = { ...user.personalInfo, ...personalInfo };
+    if (educationDetails) user.educationDetails = educationDetails;
+    if (experienceDetails) user.experienceDetails = experienceDetails;
+    if (skills) user.skills = skills;
+    if (projects) user.projects = projects;
+    if (certificates) user.certificates = certificates;
+    if (visibility) user.visibility = visibility;
+
+    await user.save();
+    return res.json({ success: true, user });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: 'Server error updating profile' });
+  }
+});
+
+// @desc    Upload user resume
+// @route   PUT /api/auth/resume
+// @access  Private
+router.put('/resume', protect, async (req, res) => {
+  try {
+    const { fileName, fileContent } = req.body;
+    if (typeof fileName !== 'string' || typeof fileContent !== 'string') {
+      return res.status(400).json({ success: false, message: 'Please provide file name and content' });
+    }
+
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    let fileUrl = '';
+    if (fileName && fileContent) {
+      const { uploadToS3 } = require('../utils/s3Upload');
+      try {
+        fileUrl = await uploadToS3(fileContent, fileName, 'resumes');
+      } catch (uploadErr) {
+        console.error('S3 upload helper failed, proceeding without URL:', uploadErr.message);
+      }
+    }
+
+    user.resume = {
+      fileName,
+      fileContent,
+      fileUrl,
+      uploadedAt: new Date()
+    };
+
+    await user.save();
+    return res.json({ success: true, user });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: 'Server error uploading resume' });
+  }
+});
+
+// @desc    Get user resume
+// @route   GET /api/auth/resume
+// @access  Private
+router.get('/resume', protect, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('resume');
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    return res.json({ success: true, resume: user.resume });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: 'Server error fetching resume' });
+  }
+});
+
+// @desc    Forgot password
+// @route   POST /api/auth/password/forgot
+// @access  Public
+router.post('/password/forgot', async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    // Generate token
+    const resetToken = crypto.randomBytes(20).toString('hex');
+    user.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+    user.resetPasswordExpire = Date.now() + 60 * 60 * 1000; // 1 hour
+    await user.save({ validateBeforeSave: false });
+
+    // Send email
+    const resetLink = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password/${resetToken}`;
+    try {
+      await emailService.sendPasswordReset(user.email, {
+        resetLink,
+        expiresIn: '1 hour'
+      });
+      res.json({ success: true, message: 'Password reset link sent to email' });
+    } catch (err) {
+      user.resetPasswordToken = undefined;
+      user.resetPasswordExpire = undefined;
+      await user.save({ validateBeforeSave: false });
+      return res.status(500).json({ success: false, message: 'Email could not be sent' });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// @desc    Reset password
+// @route   POST /api/auth/password/reset
+// @access  Public
+router.post('/password/reset', async (req, res) => {
+  try {
+    const { resetToken, password } = req.body;
+    const resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+    const user = await User.findOne({
+      resetPasswordToken,
+      resetPasswordExpire: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ success: false, message: 'Invalid or expired token' });
+    }
+
+    user.password = password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save();
+
+    res.json({ success: true, message: 'Password reset successful', token: generateToken(user._id) });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 

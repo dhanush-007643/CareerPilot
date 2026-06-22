@@ -67,12 +67,36 @@ router.post('/submit', protect, authorize('fresher'), async (req, res) => {
     // Calculate score percentage
     const finalPercentage = Math.round((correctCount / totalQuestions) * 100);
 
+    let certificateUrl = '';
+    if (finalPercentage >= 70) {
+      const certFileName = `cert_${quiz.title.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
+      const simulatedCertContent = Buffer.from(
+        `CAREERPILOT CERTIFICATE OF ACHIEVEMENT\n\nRecipient: ${req.user.name}\nFor Passing: ${quiz.title}\nScore: ${finalPercentage}%\nVerification Code: CP-${Date.now()}`
+      );
+      
+      const { uploadToS3 } = require('../utils/s3Upload');
+      try {
+        certificateUrl = await uploadToS3(simulatedCertContent, certFileName, 'certificates');
+      } catch (uploadErr) {
+        console.error('Certificate S3 upload failed:', uploadErr.message);
+      }
+    }
+
     // Save score to database
     const scoreRecord = await Score.create({
       userId: req.user.id,
       quizId: quiz._id,
-      score: finalPercentage
+      score: finalPercentage,
+      certificateUrl
     });
+
+    // Update user's profile with the new assessment score (if it's higher than their current one)
+    const User = require('../models/User');
+    const user = await User.findById(req.user.id);
+    if (user && finalPercentage > (user.assessmentScore || 0)) {
+      user.assessmentScore = finalPercentage;
+      await user.save();
+    }
 
     return res.status(201).json({
       success: true,
@@ -81,7 +105,8 @@ router.post('/submit', protect, authorize('fresher'), async (req, res) => {
         scoreId: scoreRecord._id,
         score: finalPercentage,
         correctCount,
-        totalQuestions
+        totalQuestions,
+        certificateUrl
       }
     });
   } catch (error) {

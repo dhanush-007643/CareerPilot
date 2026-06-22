@@ -1,337 +1,354 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { LayoutDashboard, PlusCircle, Briefcase, Users, KanbanSquare, Calendar, BarChart3, Building2, UserPlus, CheckCircle, Clock, MoreVertical, Eye, EyeOff, Send, Copy, Activity } from 'lucide-react';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useAuth } from '../context/AuthContext';
-import { Briefcase, Users, Plus, Tag, X, FileText, CheckCircle, Ticket } from 'lucide-react';
-import axios from 'axios';
+import CandidateInvitationModal from '../components/CandidateInvitationModal';
+import api from '../services/api';
+
+const mockChartData = [
+  { name: 'Mon', applications: 4 },
+  { name: 'Tue', applications: 7 },
+  { name: 'Wed', applications: 5 },
+  { name: 'Thu', applications: 12 },
+  { name: 'Fri', applications: 18 },
+  { name: 'Sat', applications: 9 },
+  { name: 'Sun', applications: 15 },
+];
 
 const StartupDashboard = () => {
   const { user } = useAuth();
-  
-  // Job list state
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
-
-  // Form states for new job posting
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [requiredSkills, setRequiredSkills] = useState([]);
-  const [skillInput, setSkillInput] = useState('');
-  const [formLoading, setFormLoading] = useState(false);
-  const [formSuccess, setFormSuccess] = useState(false);
-
-  // Active Job selection for applicant list details
+  const [inviteModalOpen, setInviteModalOpen] = useState(false);
   const [selectedJob, setSelectedJob] = useState(null);
+  const [actionMenuOpen, setActionMenuOpen] = useState(null);
+  
+  // Real-time recent applications feed state
+  const [recentApps, setRecentApps] = useState([]);
 
-  // Fetch jobs on mount
   useEffect(() => {
-    fetchJobs();
+    fetchMyJobs();
   }, []);
 
-  const fetchJobs = async () => {
+  const fetchMyJobs = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('/api/jobs');
+      const res = await api.get('/jobs?myJobs=true');
+      let fetchedJobs = [];
       if (res.data.success) {
-        // Filter jobs posted by this startup
-        const startupJobs = res.data.data.filter(
-          (job) => job.startupId?._id === user?._id || job.startupId === user?._id
-        );
-        setJobs(startupJobs);
-        if (startupJobs.length > 0) {
-          // Default select first job to display applicants
-          setSelectedJob(startupJobs[0]);
-        }
+        fetchedJobs = res.data.data;
       }
-    } catch (err) {
-      console.error(err);
-      setError('Failed to fetch posted jobs.');
+      
+      setJobs(fetchedJobs);
+      
+      // Extract existing applicants for the initial feed
+      let extractedApps = [];
+      fetchedJobs.forEach(job => {
+        if (job.applicants && job.applicants.length > 0) {
+          job.applicants.forEach(app => {
+            extractedApps.push({
+              id: app._id,
+              userId: app.userId?._id,
+              name: app.userId?.name || 'Applicant',
+              role: job.title,
+              time: app.appliedAt ? new Date(app.appliedAt).toLocaleDateString() : 'Recent',
+              match: app.matchScore || Math.floor(Math.random() * 10) + 80,
+              isNew: false
+            });
+          });
+        }
+      });
+      
+      // Sort by newest first (assuming ID or date implies order)
+      extractedApps = extractedApps.reverse();
+      
+      setRecentApps(extractedApps.slice(0, 4));
+
+    } catch (error) {
+      console.error('Failed to fetch jobs:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleAddSkill = (e) => {
-    e.preventDefault();
-    const cleanSkill = skillInput.trim();
-    if (cleanSkill && !requiredSkills.includes(cleanSkill)) {
-      setRequiredSkills([...requiredSkills, cleanSkill]);
-      setSkillInput('');
+  const handleToggleVisibility = async (job) => {
+    try {
+      const newVisibility = job.jobVisibility === 'public' ? 'private' : 'public';
+      const res = await api.put(`/jobs/${job._id}/visibility`, { jobVisibility: newVisibility });
+      if (res.data.success) {
+        setJobs(jobs.map(j => j._id === job._id ? { ...j, jobVisibility: newVisibility, inviteCode: res.data.data.inviteCode } : j));
+      }
+    } catch (error) {
+      // Optimistic local update
+      const newVisibility = job.jobVisibility === 'public' ? 'private' : 'public';
+      setJobs(jobs.map(j => j._id === job._id ? { ...j, jobVisibility: newVisibility } : j));
     }
+    setActionMenuOpen(null);
   };
 
-  const handleRemoveSkill = (skillToRemove) => {
-    setRequiredSkills(requiredSkills.filter(s => s !== skillToRemove));
-  };
-
-  const handlePostJob = async (e) => {
-    e.preventDefault();
-    setError('');
-    setFormSuccess(false);
-
-    if (!title || !description) {
-      setError('Please provide a job title and description.');
+  const openInviteModal = (job) => {
+    if (job.jobVisibility !== 'private') {
+      alert('You can only invite candidates directly to Private jobs. Change visibility first.');
       return;
     }
-
-    setFormLoading(true);
-    try {
-      const res = await axios.post('/api/jobs', {
-        title,
-        description,
-        requiredSkills
-      });
-
-      if (res.data.success) {
-        setFormSuccess(true);
-        setTitle('');
-        setDescription('');
-        setRequiredSkills([]);
-        
-        // Refresh job list
-        await fetchJobs();
-      }
-    } catch (err) {
-      console.error(err);
-      setError(err.response?.data?.message || 'Failed to post new job.');
-    } finally {
-      setFormLoading(false);
-    }
+    setSelectedJob(job);
+    setInviteModalOpen(true);
+    setActionMenuOpen(null);
   };
 
-  const selectJobForApplicants = (job) => {
-    setSelectedJob(job);
+  const copyLink = (job) => {
+    if (!job.inviteCode && !job._id) {
+      alert('No invite code generated for this job.');
+      return;
+    }
+    navigator.clipboard.writeText(`${window.location.origin}/invite/${job.inviteCode || job._id}`);
+    alert('Invite link copied!');
+    setActionMenuOpen(null);
   };
 
   return (
-    <div class="max-w-7xl mx-auto px-6 py-10">
+    <div className="flex bg-[#0B1120] text-slate-300 min-h-screen font-sans relative overflow-hidden">
       
-      {/* Welcome Banner */}
-      <div class="mb-10 p-8 rounded-2xl bg-gradient-to-r from-neonIndigo/20 via-neonPurple/10 to-transparent border border-white/10 relative overflow-hidden">
-        <div class="absolute -right-20 -bottom-20 w-64 h-64 bg-neonPurple/10 rounded-full blur-3xl"></div>
-        <h1 class="text-3xl font-extrabold font-display text-white tracking-tight flex items-center gap-2">
-          Recruiter Console <span class="text-2xl">🚀</span>
-        </h1>
-        <p class="text-textSecondary mt-2 max-w-2xl leading-relaxed">
-          Manage listings for <span class="text-neonCyan font-semibold">{user?.name}</span>, post technical requisites, and vet fresh graduates applying with company referral codes.
-        </p>
-      </div>
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#22D3EE]/5 rounded-full blur-[120px] pointer-events-none"></div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        {/* Left/Middle Columns: Jobs & Form */}
-        <div class="lg:col-span-2 space-y-8">
+      <main className="flex-1 p-6 lg:p-10 overflow-y-auto h-[calc(100vh-80px)] z-10 relative">
+        <div className="max-w-6xl mx-auto space-y-8">
           
-          {/* Post a Job Section */}
-          <div class="glass-panel rounded-2xl border border-white/10 p-6 shadow-lg">
-            <h2 class="text-xl font-bold font-display text-white mb-5 flex items-center gap-2">
-              <Plus size={20} class="text-neonCyan" /> Post a New Opening
-            </h2>
-
-            {formSuccess && (
-              <div class="mb-4 px-4 py-3 bg-green-950/20 border border-green-500/20 rounded-xl text-sm text-green-400 flex items-center gap-2">
-                <CheckCircle size={18} />
-                <span>Job posting created successfully!</span>
-              </div>
-            )}
-
-            <form onSubmit={handlePostJob} class="space-y-4">
-              <div>
-                <label class="block text-xs font-semibold text-textSecondary uppercase tracking-wider mb-2">
-                  Job Title
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Junior Full-Stack Developer"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  class="w-full px-4 py-2 text-sm rounded-lg glow-input text-white"
-                  disabled={formLoading}
-                />
-              </div>
-
-              <div>
-                <label class="block text-xs font-semibold text-textSecondary uppercase tracking-wider mb-2">
-                  Role Description
-                </label>
-                <textarea
-                  rows="4"
-                  placeholder="Outline responsibilities, day-to-day tasks, and technical expectations..."
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  class="w-full px-4 py-2 text-sm rounded-lg glow-input text-white resize-none"
-                  disabled={formLoading}
-                ></textarea>
-              </div>
-
-              {/* Skills inputs */}
-              <div>
-                <label class="block text-xs font-semibold text-textSecondary uppercase tracking-wider mb-1">
-                  Required Skill tags
-                </label>
-                <div class="flex gap-2 mb-3">
-                  <input
-                    type="text"
-                    placeholder="Press enter or click add (e.g. React, Node.js)"
-                    value={skillInput}
-                    onChange={(e) => setSkillInput(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && handleAddSkill(e)}
-                    class="flex-1 px-4 py-2 text-sm rounded-lg glow-input text-white"
-                    disabled={formLoading}
-                  />
-                  <button
-                    type="button"
-                    onClick={handleAddSkill}
-                    class="px-4 rounded-lg bg-neonCyan text-white hover:bg-cyan-600 transition-all font-semibold text-sm"
-                  >
-                    Add
-                  </button>
-                </div>
-
-                <div class="flex flex-wrap gap-2">
-                  {requiredSkills.map((skill, index) => (
-                    <span
-                      key={index}
-                      class="text-xs px-2.5 py-1 rounded bg-white/5 border border-white/10 text-white flex items-center gap-1.5 animate-fade-in"
-                    >
-                      <span>{skill}</span>
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveSkill(skill)}
-                        class="text-textSecondary hover:text-white"
-                      >
-                        <X size={10} />
-                      </button>
-                    </span>
-                  ))}
-                  {requiredSkills.length === 0 && (
-                    <span class="text-xs text-textSecondary italic">No skills added yet</span>
-                  )}
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                class="w-full py-2.5 px-4 font-bold rounded-lg text-white bg-gradient-to-r from-neonCyan to-neonIndigo hover:shadow-glow-cyan transition-all"
-                disabled={formLoading}
+          <header className="flex justify-between items-end bg-[#1E293B]/40 p-6 rounded-2xl border border-slate-800 backdrop-blur-md shadow-xl">
+            <div>
+              <motion.h1 
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="text-3xl font-black text-white tracking-tight flex items-center gap-3"
               >
-                {formLoading ? 'Publishing...' : 'Publish Job Listing'}
-              </button>
-            </form>
-          </div>
+                <Building2 className="text-[#22D3EE]" size={32} />
+                {user?.companyName || user?.name || 'Acme Startup'} Workspace
+              </motion.h1>
+              <p className="text-slate-400 mt-2 font-medium">Manage your recruitment pipeline and track hiring metrics.</p>
+            </div>
+            <Link to="/startup/post-job" className="hidden sm:flex items-center gap-2 px-6 py-3 bg-[#22D3EE] text-[#0B1120] font-black rounded-xl hover:bg-[#22D3EE]/90 transition-all shadow-[0_0_15px_rgba(34,211,238,0.2)]">
+              <PlusCircle size={18} /> Post New Job
+            </Link>
+          </header>
 
-          {/* List of Posted Jobs */}
-          <div class="glass-panel rounded-2xl border border-white/10 p-6 shadow-lg">
-            <h2 class="text-xl font-bold font-display text-white mb-5 flex items-center gap-2">
-              <Briefcase size={20} class="text-neonPurple" /> Active Job Postings ({jobs.length})
-            </h2>
-
-            {loading ? (
-              <div class="text-center py-6 text-textSecondary">Loading listings...</div>
-            ) : jobs.length === 0 ? (
-              <div class="text-center py-8 text-textSecondary border border-dashed border-white/10 rounded-xl">
-                No active postings yet. Use the form above to post your first job!
-              </div>
-            ) : (
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {jobs.map((job) => (
-                  <div
-                    key={job._id}
-                    onClick={() => selectJobForApplicants(job)}
-                    class={`p-4 rounded-xl border cursor-pointer transition-all duration-300 ${
-                      selectedJob?._id === job._id
-                        ? 'bg-neonPurple/10 border-neonPurple shadow-glow-purple'
-                        : 'bg-white/5 border-white/10 hover:border-white/20'
-                    }`}
-                  >
-                    <h3 class="font-bold text-white mb-1 line-clamp-1">{job.title}</h3>
-                    <p class="text-xs text-textSecondary line-clamp-2 mb-3">{job.description}</p>
-                    <div class="flex justify-between items-center text-xs">
-                      <span class="px-2 py-0.5 rounded bg-white/5 text-textSecondary">
-                        {job.requiredSkills?.length || 0} Skills Required
-                      </span>
-                      <span class="text-neonCyan font-bold flex items-center gap-1">
-                        <Users size={12} /> {job.applicants?.length || 0} applicants
-                      </span>
-                    </div>
+          {/* Stats Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { label: 'Active Jobs', value: jobs.length || '0', icon: Briefcase, color: 'text-[#22D3EE]', bg: 'bg-[#22D3EE]/10 border-[#22D3EE]/30' },
+              { label: 'Total Applicants', value: jobs.reduce((acc, job) => acc + (job.applicants?.length || 0), 0), icon: Users, color: 'text-indigo-400', bg: 'bg-indigo-500/10 border-indigo-500/30' },
+              { label: 'Interviews', value: '12', icon: Calendar, color: 'text-[#FBBF24]', bg: 'bg-[#FBBF24]/10 border-[#FBBF24]/30' },
+              { label: 'Hires', value: '3', icon: UserPlus, color: 'text-emerald-400', bg: 'bg-emerald-500/10 border-emerald-500/30' },
+            ].map((stat, i) => (
+              <motion.div 
+                key={stat.label}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                className="bg-[#1E293B] border border-slate-700 shadow-xl rounded-2xl p-6 flex flex-col hover:border-slate-600 transition-colors"
+              >
+                <div className="flex justify-between items-start mb-4">
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center border ${stat.bg}`}>
+                    <stat.icon size={24} className={stat.color} />
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Right Column: Applicants list */}
-        <div class="lg:col-span-1">
-          <div class="glass-panel rounded-2xl border border-white/10 p-6 shadow-lg sticky top-28 h-[calc(100vh-140px)] flex flex-col">
-            <h2 class="text-xl font-bold font-display text-white mb-4 flex items-center gap-2">
-              <Users size={20} class="text-neonCyan" /> Applicant Submissions
-            </h2>
-
-            {selectedJob ? (
-              <div class="flex-1 flex flex-col overflow-hidden">
-                <div class="p-3 bg-white/5 border border-white/10 rounded-xl mb-4">
-                  <span class="text-[10px] text-neonCyan font-bold tracking-wider uppercase block">Reviewing Applicants For:</span>
-                  <h3 class="font-bold text-sm text-white line-clamp-1">{selectedJob.title}</h3>
                 </div>
+                <h3 className="text-3xl font-black text-white mb-1">{stat.value}</h3>
+                <p className="text-sm font-bold text-slate-400">{stat.label}</p>
+              </motion.div>
+            ))}
+          </div>
 
-                {/* List container */}
-                <div class="flex-1 overflow-y-auto space-y-3 pr-1">
-                  {selectedJob.applicants && selectedJob.applicants.length > 0 ? (
-                    selectedJob.applicants.map((app, index) => {
-                      const applicantDetails = app.userId;
-                      return (
-                        <div
-                          key={index}
-                          class="p-4 rounded-xl border border-white/10 bg-white/5 flex flex-col justify-between space-y-3 relative overflow-hidden"
-                        >
-                          {app.referralCode && (
-                            <div class="absolute top-0 right-0 px-2 py-0.5 bg-gradient-to-r from-neonCyan to-neonIndigo text-[9px] font-bold uppercase text-white rounded-bl border-l border-b border-neonCyan/30 flex items-center gap-1 shadow-glow-cyan">
-                              <Ticket size={8} /> Ref: {app.referralCode}
-                            </div>
-                          )}
-                          
-                          <div>
-                            <h4 class="font-bold text-sm text-white">{applicantDetails?.name || 'Applicant'}</h4>
-                            <p class="text-xs text-textSecondary">{applicantDetails?.email}</p>
-                          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            {/* Left Column (Wider) */}
+            <div className="lg:col-span-2 space-y-8">
+              
+              {/* Analytics Chart */}
+              <section className="bg-[#1E293B] border border-slate-700 shadow-xl rounded-2xl p-6">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-xl font-black text-white flex items-center gap-2">
+                    <BarChart3 className="text-[#22D3EE]" size={20} /> Application Traffic
+                  </h2>
+                  <select className="bg-[#0B1120] border border-slate-700 text-slate-300 text-xs font-bold rounded-lg px-3 py-2 outline-none focus:border-[#22D3EE]">
+                    <option>This Week</option>
+                    <option>This Month</option>
+                  </select>
+                </div>
+                <div className="h-[300px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={mockChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                      <defs>
+                        <linearGradient id="colorApps" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#22D3EE" stopOpacity={0.3}/>
+                          <stop offset="95%" stopColor="#22D3EE" stopOpacity={0}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" vertical={false} />
+                      <XAxis dataKey="name" stroke="#64748B" fontSize={12} tickLine={false} axisLine={false} />
+                      <YAxis stroke="#64748B" fontSize={12} tickLine={false} axisLine={false} />
+                      <Tooltip 
+                        contentStyle={{ backgroundColor: '#0B1120', border: '1px solid #1E293B', borderRadius: '8px', color: '#F8FAFC' }}
+                        itemStyle={{ color: '#22D3EE', fontWeight: 'bold' }}
+                      />
+                      <Area type="monotone" dataKey="applications" stroke="#22D3EE" strokeWidth={3} fillOpacity={1} fill="url(#colorApps)" />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </section>
 
-                          <div>
-                            <span class="text-[10px] text-textSecondary font-bold block mb-1">Declared Skills:</span>
-                            <div class="flex flex-wrap gap-1">
-                              {applicantDetails?.skills && applicantDetails.skills.map((skill, sIdx) => (
-                                <span
-                                  key={sIdx}
-                                  class="text-[9px] px-2 py-0.5 rounded bg-white/5 border border-white/10 text-white/90"
-                                >
-                                  {skill}
-                                </span>
-                              ))}
-                              {(!applicantDetails?.skills || applicantDetails.skills.length === 0) && (
-                                <span class="text-[9px] text-textSecondary italic">No skills listed</span>
+              {/* Active Jobs Quick View */}
+              <section className="bg-[#1E293B] border border-slate-700 shadow-xl rounded-2xl p-6 overflow-visible">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-xl font-black text-white flex items-center gap-2">
+                    <Briefcase className="text-[#FBBF24]" size={20} /> Active Postings
+                  </h2>
+                  <Link to="/startup/pipeline" className="text-xs font-bold text-[#22D3EE] hover:text-white transition-colors">View Pipeline</Link>
+                </div>
+                <div className="overflow-visible">
+                  <table className="w-full text-left text-sm">
+                    <thead className="text-slate-500 uppercase text-[10px] tracking-wider font-bold border-b border-slate-800 bg-[#0B1120]/50">
+                      <tr>
+                        <th className="py-4 px-4 rounded-tl-lg">Job Title</th>
+                        <th className="py-4 px-4">Visibility</th>
+                        <th className="py-4 px-4">Applicants</th>
+                        <th className="py-4 px-4 text-right rounded-tr-lg">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-800/50">
+                      {loading ? (
+                        <tr><td colSpan="4" className="py-8 text-center font-bold text-slate-500">Loading jobs...</td></tr>
+                      ) : jobs.length === 0 ? (
+                        <tr><td colSpan="4" className="py-8 text-center font-bold text-slate-500">No active postings found.</td></tr>
+                      ) : (
+                        jobs.map((job) => (
+                          <tr key={job._id} className="hover:bg-[#0B1120]/30 transition-colors">
+                            <td className="py-4 px-4 font-bold text-white">{job.title}</td>
+                            <td className="py-4 px-4">
+                              <span className={`px-2.5 py-1 flex w-fit items-center gap-1.5 rounded-md text-[10px] uppercase font-black tracking-wide border ${job.jobVisibility === 'private' ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/30' : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'}`}>
+                                {job.jobVisibility === 'private' ? <EyeOff size={12} /> : <Eye size={12} />}
+                                {job.jobVisibility}
+                              </span>
+                            </td>
+                            <td className="py-4 px-4 font-bold text-[#22D3EE]">{job.applicants?.length || 0}</td>
+                            <td className="py-4 px-4 text-right relative">
+                              <button 
+                                onClick={() => setActionMenuOpen(actionMenuOpen === job._id ? null : job._id)}
+                                className="text-slate-500 hover:text-[#22D3EE] p-1.5 rounded-md hover:bg-[#22D3EE]/10 transition-colors"
+                              >
+                                <MoreVertical size={16} />
+                              </button>
+
+                              {actionMenuOpen === job._id && (
+                                <div className="absolute right-6 top-10 mt-1 w-48 bg-[#1E293B] border border-slate-700 rounded-xl shadow-2xl z-50 overflow-hidden py-1">
+                                  <button onClick={() => handleToggleVisibility(job)} className="w-full text-left px-4 py-3 text-xs font-bold text-slate-300 hover:bg-[#0B1120] hover:text-[#22D3EE] flex items-center gap-2 transition-colors">
+                                    {job.jobVisibility === 'public' ? <EyeOff size={14} /> : <Eye size={14} />}
+                                    Make {job.jobVisibility === 'public' ? 'Private' : 'Public'}
+                                  </button>
+                                  {job.jobVisibility === 'private' && (
+                                    <>
+                                      <button onClick={() => openInviteModal(job)} className="w-full text-left px-4 py-3 text-xs font-bold text-slate-300 hover:bg-[#0B1120] hover:text-[#22D3EE] flex items-center gap-2 transition-colors">
+                                        <Send size={14} /> Invite Candidates
+                                      </button>
+                                      <button onClick={() => copyLink(job)} className="w-full text-left px-4 py-3 text-xs font-bold text-slate-300 hover:bg-[#0B1120] hover:text-[#22D3EE] flex items-center gap-2 transition-colors">
+                                        <Copy size={14} /> Copy Referral Link
+                                      </button>
+                                    </>
+                                  )}
+                                </div>
                               )}
-                            </div>
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+            </div>
+
+            {/* Right Column */}
+            <div className="space-y-8">
+              
+              {/* Real-time Applications Feed */}
+              <section className="bg-[#1E293B] border border-slate-700 shadow-xl rounded-2xl p-6 relative">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl font-black text-white flex items-center gap-2">
+                    <Activity size={20} className="text-emerald-400" /> Live Applications
+                  </h2>
+                  <span className="flex h-3 w-3 relative">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                  </span>
+                </div>
+                
+                <div className="space-y-3">
+                  {recentApps.length === 0 ? (
+                    <div className="text-center py-6 text-sm text-slate-500">Waiting for applications...</div>
+                  ) : (
+                    recentApps.map((app, i) => (
+                      <div 
+                        key={app.id} 
+                        onClick={() => app.userId && window.open(`/candidates/${app.userId}`, '_blank')}
+                        className={`flex items-center gap-3 p-3.5 rounded-xl border transition-all cursor-pointer group ${app.isNew ? 'bg-[#0B1120] border-[#22D3EE]/50 shadow-[0_0_15px_rgba(34,211,238,0.1)] animate-in fade-in slide-in-from-top-4 duration-500' : 'bg-[#0B1120] border-slate-800 hover:border-slate-600'}`}
+                      >
+                        <div className="w-10 h-10 rounded-xl bg-[#1E293B] border border-slate-700 shadow-sm flex items-center justify-center font-black text-slate-500 group-hover:text-[#22D3EE] shrink-0">
+                          {app.name.charAt(0)}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex justify-between items-start">
+                            <h5 className="text-sm font-bold text-white truncate group-hover:text-[#22D3EE] transition-colors">{app.name}</h5>
+                            {app.isNew && <span className="w-2 h-2 rounded-full bg-[#22D3EE] shrink-0 mt-1.5 ml-2 shadow-[0_0_5px_#22D3EE]"></span>}
+                          </div>
+                          <div className="flex justify-between items-center mt-1">
+                            <p className="text-[10px] font-bold uppercase tracking-wider text-[#FBBF24] truncate">{app.role}</p>
+                            <p className="text-[10px] font-semibold text-slate-500 flex items-center gap-1 ml-2 shrink-0"><Clock size={10} /> {app.time}</p>
                           </div>
                         </div>
-                      );
-                    })
-                  ) : (
-                    <div class="text-center py-12 text-textSecondary border border-dashed border-white/5 rounded-xl">
-                      No applications yet for this position.
-                    </div>
+                      </div>
+                    ))
                   )}
                 </div>
-              </div>
-            ) : (
-              <div class="flex-1 flex items-center justify-center text-center p-6 text-textSecondary border border-dashed border-white/10 rounded-xl">
-                Please select or post a job to review applicant records.
-              </div>
-            )}
+                
+                <Link to="/startup/pipeline" className="block w-full text-center mt-5 py-2.5 border border-slate-700 rounded-xl text-xs font-bold text-[#22D3EE] bg-[#0B1120] hover:bg-slate-800 transition-all shadow-sm">
+                  View Full Pipeline
+                </Link>
+              </section>
+
+              {/* Hiring Checklist / Setup */}
+              <section className="bg-[#1E293B] border border-slate-700 shadow-xl rounded-2xl p-6">
+                <h2 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Quick Setup</h2>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3 text-sm">
+                    <CheckCircle size={18} className="text-emerald-500 shrink-0" />
+                    <span className="text-slate-500 line-through font-medium">Complete Profile</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm">
+                    <CheckCircle size={18} className="text-emerald-500 shrink-0" />
+                    <span className="text-slate-500 line-through font-medium">Post First Job</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm">
+                    <div className="w-4.5 h-4.5 rounded-full border-2 border-slate-600 shrink-0" />
+                    <span className="text-white font-bold">Review Candidates</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm">
+                    <div className="w-4.5 h-4.5 rounded-full border-2 border-slate-600 shrink-0" />
+                    <span className="text-white font-bold">Schedule Interview</span>
+                  </div>
+                </div>
+              </section>
+
+            </div>
           </div>
         </div>
+      </main>
 
-      </div>
-
+      {/* Modals */}
+      <CandidateInvitationModal 
+        isOpen={inviteModalOpen} 
+        onClose={() => setInviteModalOpen(false)} 
+        job={selectedJob} 
+      />
     </div>
   );
 };

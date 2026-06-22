@@ -1,0 +1,588 @@
+{
+  "timestamp": "2026-06-21T16:23:02.262Z",
+  "metadata": {
+    "users": 4,
+    "jobs": 3,
+    "applications": 4,
+    "quizzes": 3,
+    "scores": 2,
+    "notifications": 4
+  },
+  "collections": {
+    "users": [
+      {
+        "personalInfo": {
+          "phone": "+44 20 7600 0000",
+          "bio": "We build next-generation artificial intelligence systems to solve science and technology challenges.",
+          "location": "London, UK / Remote"
+        },
+        "resume": {
+          "fileName": "",
+          "fileContent": "",
+          "fileUrl": "",
+          "uploadedAt": "2026-06-18T23:31:03.632Z"
+        },
+        "visibility": "public",
+        "companyVisibility": "public",
+        "companyId": null,
+        "companyRole": null,
+        "followingCompanies": [],
+        "_id": "6a347fb7705dfec86466b26c",
+        "name": "Google DeepMind",
+        "email": "startup@example.com",
+        "password": "$2a$10$CBTL2LQHXH5HES.BW3dNL.B.hjxuIDMVSp5oaE5Fi3dWYrFG/cT5m",
+        "role": "startup",
+        "skills": [],
+        "educationDetails": [],
+        "experienceDetails": [],
+        "createdAt": "2026-06-18T23:31:03.635Z",
+        "updatedAt": "2026-06-18T23:31:03.635Z",
+        "__v": 0
+      },
+      {
+        "personalInfo": {
+          "phone": "+1 (555) 123-4567",
+          "bio": "Enthusiastic full-stack web developer passionate about AI integrations and MERN web applications.",
+          "location": "San Francisco, CA"
+        },
+        "resume": {
+          "fileName": "",
+          "fileContent": "",
+          "fileUrl": "",
+          "uploadedAt": "2026-06-18T23:31:03.768Z"
+        },
+        "visibility": "public",
+        "companyVisibility": "public",
+        "companyId": null,
+        "companyRole": null,
+        "followingCompanies": [],
+        "_id": "6a347fb7705dfec86466b26e",
+        "name": "Alex Mercer",
+        "email": "fresher@example.com",
+        "password": "$2a$10$mog6Zw7YzrQKzyWbteif4.S2WLOsR5jjeW/KeZFGzwletdY3TP0c.",
+        "role": "fresher",
+        "skills": [
+          "React.js",
+          "Node.js",
+          "Express",
+          "Tailwind CSS",
+          "JavaScript",
+          "MongoDB"
+        ],
+        "educationDetails": [
+          {
+            "school": "Stanford University",
+            "degree": "Bachelor of Science",
+            "fieldOfStudy": "Computer Science",
+            "startYear": "2022",
+            "endYear": "2026",
+            "_id": "6a347fb7705dfec86466b26f"
+          }
+        ],
+        "experienceDetails": [
+          {
+            "title": "Frontend Intern",
+            "company": "AI Solutions Inc.",
+            "location": "Remote",
+            "startDate": "June 2025",
+            "endDate": "August 2025",
+            "description": "Developed and optimized client-facing dashboards using React and CSS Grid.",
+            "_id": "6a347fb7705dfec86466b270"
+          }
+        ],
+        "createdAt": "2026-06-18T23:31:03.770Z",
+        "updatedAt": "2026-06-18T23:31:03.770Z",
+        "__v": 0
+      },
+      {
+        "personalInfo": {
+          "phone": "",
+          "bio": "",
+          "location": ""
+        },
+        "resume": {
+          "fileName": "",
+          "fileContent": "",
+          "fileUrl": "",
+          "uploadedAt": "2026-06-18T23:31:55.566Z"
+        },
+        "followingCompanies": [],
+        "_id": "6a347feb705dfec86466b283",
+        "name": "dhaanush",
+        "email": "192421162.simats@saveetha.com",
+        "password": "$2a$10$yzvO5I3z5JBBXbOhUKb.Iu9iX9EVenB7z5u3ZvsEXHXEd7k1LIh12",
+        "role": "startup",
+        "skills": [],
+        "educationDetails": [],
+        "experienceDetails": [],
+        "createdAt": "2026-06-18T23:31:55.567Z",
+        "updatedAt": "2026-06-20T12:07:04.283Z",
+        "__v": 0,
+        "companyId": "6a368268308c61704c38fd36",
+        "companyRole": "Admin",
+        "companyVisibility": "public",
+        "visibility": "public"
+      },
+      {
+        "personalInfo": {
+          "phone": "",
+          "bio": "",
+          "location": ""
+        },
+        "resume": {
+          "fileName": "",
+          "fileContent": "",
+          "fileUrl": "",
+          "uploadedAt": "2026-06-20T11:28:33.601Z"
+        },
+        "companyId": null,
+        "companyRole": null,
+        "followingCompanies": [],
+        "_id": "6a367961ac3349e4ce9a977f",
+        "name": "dhaanush",
+        "email": "raarthi04@gmail.com",
+        "password": "$2a$10$dtciRdKWACFMZfNb7rf9.uSZ8XTk2yhS1OADzZIsmRsEcd3CdLHLW",
+        "role": "fresher",
+        "profileVisibility": "Public",
+        "skills": [],
+        "educationDetails": [],
+        "experienceDetails": [],
+        "createdAt": "2026-06-20T11:28:33.604Z",
+        "updatedAt": "2026-06-20T11:39:27.864Z",
+        "__v": 0,
+        "companyVisibility": "public",
+        "visibility": "public"
+      }
+    ],
+    "jobs": [
+      {
+        "domain": "Software Engineering",
+        "jobVisibility": "public",
+        "inviteCode": null,
+        "invitedCandidates": [],
+        "_id": "6a347fb7705dfec86466b277",
+        "startupId": "6a347fb7705dfec86466b26c",
+        "title": "React UI Developer",
+        "description": "Help build premium user interfaces with modern glassmorphism design, advanced tailwind themes, and custom animations.",
+        "requiredSkills": [
+          "React.js",
+          "Tailwind CSS",
+          "JavaScript"
+        ],
+        "isWFH": false,
+        "jobType": "Internship",
+        "hasStipend": true,
+        "location": "London, UK",
+        "salary": "£3,500 / month",
+        "experience": "Freshers welcome",
+        "company": "Google DeepMind",
+        "applicants": [
+          {
+            "userId": "6a347fb7705dfec86466b26e",
+            "referralCode": "",
+            "_id": "6a347fb7705dfec86466b280",
+            "appliedAt": "2026-06-18T23:31:03.959Z"
+          }
+        ],
+        "createdAt": "2026-06-18T23:31:03.894Z",
+        "updatedAt": "2026-06-18T23:31:03.960Z",
+        "__v": 1
+      },
+      {
+        "jobVisibility": "public",
+        "inviteCode": null,
+        "invitedCandidates": [],
+        "_id": "6a347fb7705dfec86466b276",
+        "startupId": "6a347fb7705dfec86466b26c",
+        "title": "Full Stack Engineer (MERN)",
+        "description": "We are seeking an outstanding Full Stack Engineer to help build our Next-Generation Research platforms. You will design, develop, and integrate user interfaces with complex backends.",
+        "requiredSkills": [
+          "React.js",
+          "Node.js",
+          "Express",
+          "Tailwind CSS"
+        ],
+        "isWFH": true,
+        "jobType": "Full-Time",
+        "hasStipend": false,
+        "location": "Remote / London",
+        "salary": "$120,000 - $145,000",
+        "experience": "Freshers welcome",
+        "company": "Google DeepMind",
+        "applicants": [
+          {
+            "userId": "6a347fb7705dfec86466b26e",
+            "referralCode": "DEEPMIND-CAMPUS-99",
+            "_id": "6a347fb7705dfec86466b27c",
+            "appliedAt": "2026-06-18T23:31:03.920Z"
+          },
+          {
+            "userId": "6a367961ac3349e4ce9a977f",
+            "referralCode": "",
+            "_id": "6a3679dd45e88c0f6e33db4e",
+            "appliedAt": "2026-06-20T11:30:37.385Z"
+          }
+        ],
+        "createdAt": "2026-06-18T23:31:03.894Z",
+        "updatedAt": "2026-06-20T11:30:37.387Z",
+        "__v": 2,
+        "domain": "Software Engineering"
+      },
+      {
+        "_id": "6a3808cac03f23e4eaf05562",
+        "companyId": "6a368268308c61704c38fd36",
+        "title": "react.js",
+        "description": "hvkbudvsj",
+        "requiredSkills": [
+          "node"
+        ],
+        "isWFH": true,
+        "jobType": "Full-Time",
+        "hasStipend": false,
+        "location": "Remote",
+        "salary": "800000",
+        "experience": "Freshers welcome",
+        "domain": "Software Engineering",
+        "company": "dhaanush",
+        "jobVisibility": "public",
+        "inviteCode": null,
+        "invitedCandidates": [],
+        "applicants": [
+          {
+            "userId": "6a367961ac3349e4ce9a977f",
+            "referralCode": "",
+            "_id": "6a3809708abc4a49aa01ee92",
+            "appliedAt": "2026-06-21T15:55:28.191Z"
+          }
+        ],
+        "createdAt": "2026-06-21T15:52:42.941Z",
+        "updatedAt": "2026-06-21T15:55:28.192Z",
+        "__v": 1
+      }
+    ],
+    "applications": [
+      {
+        "resume": {
+          "fileName": "alex_mercer_resume.pdf",
+          "fileContent": "Mock base64 PDF resume content",
+          "fileUrl": "https://careerpilot.s3.amazonaws.com/resumes/alex_mercer.pdf"
+        },
+        "interview": {
+          "format": "Virtual",
+          "link": "",
+          "notes": ""
+        },
+        "applicationVisibility": "public",
+        "_id": "6a347fb7705dfec86466b27a",
+        "userId": "6a347fb7705dfec86466b26e",
+        "jobId": "6a347fb7705dfec86466b276",
+        "referralCode": "DEEPMIND-CAMPUS-99",
+        "matchPercentage": 100,
+        "status": "New",
+        "coverLetter": "I am highly passionate about Artificial Intelligence and web application interfaces. I have build several full stack projects and solved complex challenges in your training arena.",
+        "createdAt": "2026-06-18T23:31:03.910Z",
+        "updatedAt": "2026-06-18T23:31:03.910Z",
+        "__v": 0
+      },
+      {
+        "resume": {
+          "fileName": "alex_mercer_resume.pdf",
+          "fileContent": "Mock base64 PDF resume content",
+          "fileUrl": "https://careerpilot.s3.amazonaws.com/resumes/alex_mercer.pdf"
+        },
+        "interview": {
+          "dateTime": "2026-06-20T23:31:03.953Z",
+          "format": "Virtual",
+          "link": "https://meet.google.com/abc-defg-hij",
+          "notes": "Technical panel interview on React styling, animations and layouts."
+        },
+        "applicationVisibility": "public",
+        "_id": "6a347fb7705dfec86466b27e",
+        "userId": "6a347fb7705dfec86466b26e",
+        "jobId": "6a347fb7705dfec86466b277",
+        "referralCode": "",
+        "matchPercentage": 100,
+        "status": "Interviewing",
+        "coverLetter": "Vibrant colors, glassmorphic UI, and smooth animations are my expertise. I would love to build top-tier frontends for your research group.",
+        "createdAt": "2026-06-18T23:31:03.956Z",
+        "updatedAt": "2026-06-18T23:31:03.956Z",
+        "__v": 0
+      },
+      {
+        "resume": {
+          "fileName": "",
+          "fileContent": "",
+          "fileUrl": ""
+        },
+        "interview": {
+          "format": "Virtual",
+          "link": "",
+          "notes": ""
+        },
+        "applicationVisibility": "public",
+        "_id": "6a3679dd45e88c0f6e33db4c",
+        "userId": "6a367961ac3349e4ce9a977f",
+        "jobId": "6a347fb7705dfec86466b276",
+        "referralCode": "",
+        "visibilityMode": "Public",
+        "matchPercentage": 0,
+        "status": "Applied",
+        "coverLetter": "",
+        "createdAt": "2026-06-20T11:30:37.376Z",
+        "updatedAt": "2026-06-20T11:30:37.376Z",
+        "__v": 0
+      },
+      {
+        "resume": {
+          "fileName": "",
+          "fileContent": "",
+          "fileUrl": ""
+        },
+        "interview": {
+          "format": "Virtual",
+          "link": "",
+          "notes": ""
+        },
+        "_id": "6a3809708abc4a49aa01ee90",
+        "userId": "6a367961ac3349e4ce9a977f",
+        "jobId": "6a3808cac03f23e4eaf05562",
+        "referralCode": "",
+        "applicationVisibility": "public",
+        "matchPercentage": 0,
+        "status": "Applied",
+        "coverLetter": "",
+        "createdAt": "2026-06-21T15:55:28.186Z",
+        "updatedAt": "2026-06-21T15:55:28.186Z",
+        "__v": 0
+      }
+    ],
+    "quizzes": [
+      {
+        "_id": "6a347fb7705dfec86466b25b",
+        "title": "React.js Fundamentals",
+        "questions": [
+          {
+            "questionText": "Which React hook is used to manage component state?",
+            "options": [
+              "useEffect",
+              "useState",
+              "useContext",
+              "useRef"
+            ],
+            "correctAnswer": "useState",
+            "_id": "6a347fb7705dfec86466b25c"
+          },
+          {
+            "questionText": "What is the correct way to pass data from a parent to a child component?",
+            "options": [
+              "Using state",
+              "Using props",
+              "Using Redux",
+              "Using localStorage"
+            ],
+            "correctAnswer": "Using props",
+            "_id": "6a347fb7705dfec86466b25d"
+          },
+          {
+            "questionText": "Which lifecycle event does useEffect with an empty dependency array [] emulate?",
+            "options": [
+              "componentDidMount",
+              "componentDidUpdate",
+              "componentWillUnmount",
+              "render"
+            ],
+            "correctAnswer": "componentDidMount",
+            "_id": "6a347fb7705dfec86466b25e"
+          },
+          {
+            "questionText": "What does JSX stand for?",
+            "options": [
+              "JavaScript Extension",
+              "JavaScript XML",
+              "Java Syntax Extension",
+              "JSON XML"
+            ],
+            "correctAnswer": "JavaScript XML",
+            "_id": "6a347fb7705dfec86466b25f"
+          }
+        ],
+        "createdAt": "2026-06-18T23:31:03.609Z",
+        "updatedAt": "2026-06-18T23:31:03.609Z",
+        "__v": 0
+      },
+      {
+        "_id": "6a347fb7705dfec86466b260",
+        "title": "Node.js & Express Essentials",
+        "questions": [
+          {
+            "questionText": "Which built-in Node.js module handles file operations?",
+            "options": [
+              "path",
+              "http",
+              "fs",
+              "os"
+            ],
+            "correctAnswer": "fs",
+            "_id": "6a347fb7705dfec86466b261"
+          },
+          {
+            "questionText": "What does the app.use() function do in an Express application?",
+            "options": [
+              "Binds middleware to the application instance",
+              "Serves static pages only",
+              "Defines a specific database connection",
+              "Exits the application process"
+            ],
+            "correctAnswer": "Binds middleware to the application instance",
+            "_id": "6a347fb7705dfec86466b262"
+          },
+          {
+            "questionText": "Which Express route parameter definition parses a path variable named \"id\"?",
+            "options": [
+              "/users/:id",
+              "/users/?id",
+              "/users/{id}",
+              "/users/id"
+            ],
+            "correctAnswer": "/users/:id",
+            "_id": "6a347fb7705dfec86466b263"
+          },
+          {
+            "questionText": "What is NPM?",
+            "options": [
+              "Node Project Manager",
+              "Node Package Manager",
+              "New Package Module",
+              "Network Protocol Manager"
+            ],
+            "correctAnswer": "Node Package Manager",
+            "_id": "6a347fb7705dfec86466b264"
+          }
+        ],
+        "createdAt": "2026-06-18T23:31:03.609Z",
+        "updatedAt": "2026-06-18T23:31:03.609Z",
+        "__v": 0
+      },
+      {
+        "_id": "6a347fb7705dfec86466b265",
+        "title": "Modern CSS & Tailwind CSS",
+        "questions": [
+          {
+            "questionText": "How do you apply custom colors or fonts in a Tailwind CSS project?",
+            "options": [
+              "Modify tailwind.config.js",
+              "Edit index.html directly",
+              "Override styles in global.css with !important",
+              "Tailwind does not support custom styles"
+            ],
+            "correctAnswer": "Modify tailwind.config.js",
+            "_id": "6a347fb7705dfec86466b266"
+          },
+          {
+            "questionText": "Which Tailwind utility class is used to make a container a flexbox?",
+            "options": [
+              "flex-container",
+              "display-flex",
+              "flex",
+              "layout-flex"
+            ],
+            "correctAnswer": "flex",
+            "_id": "6a347fb7705dfec86466b267"
+          },
+          {
+            "questionText": "What does the class \"md:grid-cols-3\" mean in Tailwind CSS?",
+            "options": [
+              "The grid has 3 columns on medium screens and larger",
+              "The grid has 3 columns on mobile screens only",
+              "The grid has 3 rows on medium screens and larger",
+              "Grid column widths are multiplied by 3"
+            ],
+            "correctAnswer": "The grid has 3 columns on medium screens and larger",
+            "_id": "6a347fb7705dfec86466b268"
+          }
+        ],
+        "createdAt": "2026-06-18T23:31:03.609Z",
+        "updatedAt": "2026-06-18T23:31:03.609Z",
+        "__v": 0
+      }
+    ],
+    "scores": [
+      {
+        "_id": "6a347fb7705dfec86466b272",
+        "userId": "6a347fb7705dfec86466b26e",
+        "quizId": "6a347fb7705dfec86466b25b",
+        "score": 95,
+        "certificateUrl": "mock_certificate_for_6a347fb7705dfec86466b25b",
+        "createdAt": "2026-06-18T23:31:03.885Z",
+        "updatedAt": "2026-06-18T23:31:03.885Z",
+        "__v": 0
+      },
+      {
+        "_id": "6a347fb7705dfec86466b273",
+        "userId": "6a347fb7705dfec86466b26e",
+        "quizId": "6a347fb7705dfec86466b260",
+        "score": 90,
+        "certificateUrl": "mock_certificate_for_6a347fb7705dfec86466b260",
+        "createdAt": "2026-06-18T23:31:03.886Z",
+        "updatedAt": "2026-06-18T23:31:03.886Z",
+        "__v": 0
+      }
+    ],
+    "notifications": [
+      {
+        "status": "unread",
+        "_id": "6a3679dd45e88c0f6e33db50",
+        "userId": "6a367961ac3349e4ce9a977f",
+        "title": "Application Submitted",
+        "message": "You successfully applied for the \"Full Stack Engineer (MERN)\" position at \"Google DeepMind\".",
+        "type": "application_status",
+        "isRead": true,
+        "createdAt": "2026-06-20T11:30:37.403Z",
+        "updatedAt": "2026-06-20T11:31:07.772Z",
+        "__v": 0,
+        "timestamp": "2026-06-21T16:23:02.261Z"
+      },
+      {
+        "status": "unread",
+        "_id": "6a3679dd45e88c0f6e33db52",
+        "userId": "6a347fb7705dfec86466b26c",
+        "title": "New Applicant",
+        "message": "\"dhaanush\" has applied for your vacancy: \"Full Stack Engineer (MERN)\".",
+        "type": "application_status",
+        "isRead": false,
+        "createdAt": "2026-06-20T11:30:37.405Z",
+        "updatedAt": "2026-06-20T11:30:37.405Z",
+        "__v": 0,
+        "timestamp": "2026-06-21T16:23:02.261Z"
+      },
+      {
+        "_id": "6a3809708abc4a49aa01ee94",
+        "sender": null,
+        "receiver": "6a367961ac3349e4ce9a977f",
+        "role": "fresher",
+        "type": "application_status",
+        "title": "Application Submitted",
+        "message": "You successfully applied for the \"react.js\" position at \"dhaanush\".",
+        "status": "unread",
+        "timestamp": "2026-06-21T15:55:28.205Z",
+        "createdAt": "2026-06-21T15:55:28.206Z",
+        "updatedAt": "2026-06-21T15:55:28.206Z",
+        "__v": 0
+      },
+      {
+        "_id": "6a3809708abc4a49aa01ee97",
+        "sender": "6a367961ac3349e4ce9a977f",
+        "receiver": "6a347feb705dfec86466b283",
+        "role": "startup",
+        "type": "application_status",
+        "title": "New Applicant",
+        "message": "\"dhaanush\" has applied for your vacancy: \"react.js\".",
+        "status": "unread",
+        "timestamp": "2026-06-21T15:55:28.783Z",
+        "createdAt": "2026-06-21T15:55:28.784Z",
+        "updatedAt": "2026-06-21T15:55:28.784Z",
+        "__v": 0
+      }
+    ]
+  }
+}

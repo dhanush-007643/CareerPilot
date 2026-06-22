@@ -4,97 +4,145 @@
 
 @layer base {
   body {
-    background-color: #090a0f;
-    font-family: 'Inter', 'Outfit', sans-serif;
+    background-color: var(--bg-primary);
+    font-family: 'Inter', sans-serif;
+    color: var(--text-primary);
   }
 }
 
-/* Glassmorphism utility */
+/* 1. Global CSS Variables - Premium Dark Theme */
+:root {
+  --bg-primary: #0B1120;
+  --bg-secondary: #1E293B;
+  --bg-card: #1E293B;
+  --accent-primary: #22D3EE;
+  --accent-secondary: #3B82F6;
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --success: #10B981;
+  --danger: #EF4444;
+  --warning: #F59E0B;
+  --border-light: #334155;
+}
+
+/* 2. Solid Panels & Cards (Replacing Glassmorphism) */
 .glass-panel {
-  background: rgba(18, 20, 32, 0.65);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 }
 
 .glass-card {
-  background: rgba(25, 28, 44, 0.55);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(139, 92, 246, 0.15);
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-/* Custom Scrollbars */
+.glass-card:hover {
+  border-color: #475569;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+/* 3. Professional Custom Scrollbars */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #090a0f;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1b1d2e;
+  background: #475569;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #312e81;
+  background: #64748B;
 }
 
-/* Glowing ambient circles background style */
-.ambient-glow {
-  position: absolute;
-  width: 500px;
-  height: 500px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, rgba(99, 102, 241, 0.04) 50%, transparent 100%);
-  filter: blur(60px);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Input styles for premium glow focus */
+/* 4. Solid Inputs */
 .glow-input {
-  background: rgba(10, 11, 16, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  transition: all 0.3s ease;
+  background: #0F172A;
+  border: 1px solid #334155;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+  color: var(--text-primary);
+  padding: 0.75rem 1rem;
 }
 
 .glow-input:focus {
-  border-color: #8b5cf6;
-  box-shadow: 0 0 12px rgba(139, 92, 246, 0.3);
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.15);
   outline: none;
 }
 
-/* Keyframes for animations */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.glow-input::placeholder {
+  color: #64748B;
 }
 
+/* 5. Minimal Text Gradient (if still used) */
+.text-gradient {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-image: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
+}
+
+/* 6. Typography Scale Classes */
+.hero-title {
+  font-size: 48px;
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.page-title {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text-primary);
+}
+
+/* 7. Animations */
 .animate-fade-in {
-  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeIn 0.4s ease-out forwards;
 }
 
-@keyframes pulse-glow {
-  0%, 100% {
-    opacity: 0.6;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.8;
-    transform: scale(1.05);
-  }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.animate-pulse-glow {
-  animation: pulse-glow 6s infinite ease-in-out;
+/* Disable the neon glowing orbs to look realistic */
+.ambient-glow-primary {
+  display: none;
+}
+
+.ambient-glow-secondary {
+  display: none;
+}
+
+/* 8. Circuit Backgrounds */
+.circuit-bg {
+  background-color: var(--bg-primary);
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M54.627 0l.83.83-1.415 1.415L52.8 1l-1.096.365-1.414-1.414h4.337zm-2.122 0H52.5v.5h.005zm-3.535 0h.5v.5h-.5v-.5zM48.5 0h.5v.5h-.5v-.5zM0 48.5v.5h.5v-.5H0zm0 3.535v.5h.5v-.5H0zm0 3.536v-.5h.5v.5H0z' fill='%2322d3ee' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+}
+
+.circuit-bg-light {
+  background-color: #f8fafc;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M54.627 0l.83.83-1.415 1.415L52.8 1l-1.096.365-1.414-1.414h4.337zm-2.122 0H52.5v.5h.005zm-3.535 0h.5v.5h-.5v-.5zM48.5 0h.5v.5h-.5v-.5zM0 48.5v.5h.5v-.5H0zm0 3.535v.5h.5v-.5H0zm0 3.536v-.5h.5v.5H0z' fill='%23cbd5e1' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E");
 }

@@ -20,13 +20,19 @@ const protect = async (req, res, next) => {
       // Get user from the token
       req.user = await User.findById(decoded.id).select('-password');
 
+      // Fallback to Admin model if not found in User model
+      if (!req.user) {
+        const Admin = require('../models/Admin');
+        req.user = await Admin.findById(decoded.id).select('-password');
+      }
+
       if (!req.user) {
         return res.status(401).json({ success: false, message: 'Not authorized, user not found' });
       }
 
       next();
     } catch (error) {
-      console.error(error);
+      // Token is invalid or expired
       return res.status(401).json({ success: false, message: 'Not authorized, token failed' });
     }
   }

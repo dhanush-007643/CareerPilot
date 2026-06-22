@@ -1,0 +1,198 @@
+{
+  "timestamp": "2026-06-21T17:14:09.877Z",
+  "metadata": {
+    "users": 1,
+    "jobs": 0,
+    "applications": 0,
+    "quizzes": 3,
+    "scores": 0,
+    "notifications": 0
+  },
+  "collections": {
+    "users": [
+      {
+        "personalInfo": {
+          "phone": "+1 (555) 999-0000",
+          "bio": "Super Administrator account for overseeing recruiter pipelines and fresher job updates.",
+          "location": "CareerPilot HQ"
+        },
+        "resume": {
+          "fileName": "",
+          "fileContent": "",
+          "fileUrl": "",
+          "uploadedAt": "2026-06-21T17:14:08.285Z"
+        },
+        "_id": "6a381be057d2a7106d4f7364",
+        "name": "CareerPilot Administrator",
+        "email": "admin@example.com",
+        "password": "$2a$10$HPr6hOJDCeDE4mOGM98QleMfBQUoqHqX6dJIiiq/no1hr7zT.6Dfi",
+        "role": "admin",
+        "visibility": "public",
+        "companyVisibility": "public",
+        "companyId": null,
+        "companyRole": null,
+        "skills": [],
+        "followingCompanies": [],
+        "educationDetails": [],
+        "experienceDetails": [],
+        "createdAt": "2026-06-21T17:14:08.287Z",
+        "updatedAt": "2026-06-21T17:14:08.287Z",
+        "__v": 0
+      }
+    ],
+    "jobs": [],
+    "applications": [],
+    "quizzes": [
+      {
+        "_id": "6a381be057d2a7106d4f7353",
+        "title": "React.js Fundamentals",
+        "questions": [
+          {
+            "questionText": "Which React hook is used to manage component state?",
+            "options": [
+              "useEffect",
+              "useState",
+              "useContext",
+              "useRef"
+            ],
+            "correctAnswer": "useState",
+            "_id": "6a381be057d2a7106d4f7354"
+          },
+          {
+            "questionText": "What is the correct way to pass data from a parent to a child component?",
+            "options": [
+              "Using state",
+              "Using props",
+              "Using Redux",
+              "Using localStorage"
+            ],
+            "correctAnswer": "Using props",
+            "_id": "6a381be057d2a7106d4f7355"
+          },
+          {
+            "questionText": "Which lifecycle event does useEffect with an empty dependency array [] emulate?",
+            "options": [
+              "componentDidMount",
+              "componentDidUpdate",
+              "componentWillUnmount",
+              "render"
+            ],
+            "correctAnswer": "componentDidMount",
+            "_id": "6a381be057d2a7106d4f7356"
+          },
+          {
+            "questionText": "What does JSX stand for?",
+            "options": [
+              "JavaScript Extension",
+              "JavaScript XML",
+              "Java Syntax Extension",
+              "JSON XML"
+            ],
+            "correctAnswer": "JavaScript XML",
+            "_id": "6a381be057d2a7106d4f7357"
+          }
+        ],
+        "createdAt": "2026-06-21T17:14:08.276Z",
+        "updatedAt": "2026-06-21T17:14:08.276Z",
+        "__v": 0
+      },
+      {
+        "_id": "6a381be057d2a7106d4f735d",
+        "title": "Modern CSS & Tailwind CSS",
+        "questions": [
+          {
+            "questionText": "How do you apply custom colors or fonts in a Tailwind CSS project?",
+            "options": [
+              "Modify tailwind.config.js",
+              "Edit index.html directly",
+              "Override styles in global.css with !important",
+              "Tailwind does not support custom styles"
+            ],
+            "correctAnswer": "Modify tailwind.config.js",
+            "_id": "6a381be057d2a7106d4f735e"
+          },
+          {
+            "questionText": "Which Tailwind utility class is used to make a container a flexbox?",
+            "options": [
+              "flex-container",
+              "display-flex",
+              "flex",
+              "layout-flex"
+            ],
+            "correctAnswer": "flex",
+            "_id": "6a381be057d2a7106d4f735f"
+          },
+          {
+            "questionText": "What does the class \"md:grid-cols-3\" mean in Tailwind CSS?",
+            "options": [
+              "The grid has 3 columns on medium screens and larger",
+              "The grid has 3 columns on mobile screens only",
+              "The grid has 3 rows on medium screens and larger",
+              "Grid column widths are multiplied by 3"
+            ],
+            "correctAnswer": "The grid has 3 columns on medium screens and larger",
+            "_id": "6a381be057d2a7106d4f7360"
+          }
+        ],
+        "createdAt": "2026-06-21T17:14:08.276Z",
+        "updatedAt": "2026-06-21T17:14:08.276Z",
+        "__v": 0
+      },
+      {
+        "_id": "6a381be057d2a7106d4f7358",
+        "title": "Node.js & Express Essentials",
+        "questions": [
+          {
+            "questionText": "Which built-in Node.js module handles file operations?",
+            "options": [
+              "path",
+              "http",
+              "fs",
+              "os"
+            ],
+            "correctAnswer": "fs",
+            "_id": "6a381be057d2a7106d4f7359"
+          },
+          {
+            "questionText": "What does the app.use() function do in an Express application?",
+            "options": [
+              "Binds middleware to the application instance",
+              "Serves static pages only",
+              "Defines a specific database connection",
+              "Exits the application process"
+            ],
+            "correctAnswer": "Binds middleware to the application instance",
+            "_id": "6a381be057d2a7106d4f735a"
+          },
+          {
+            "questionText": "Which Express route parameter definition parses a path variable named \"id\"?",
+            "options": [
+              "/users/:id",
+              "/users/?id",
+              "/users/{id}",
+              "/users/id"
+            ],
+            "correctAnswer": "/users/:id",
+            "_id": "6a381be057d2a7106d4f735b"
+          },
+          {
+            "questionText": "What is NPM?",
+            "options": [
+              "Node Project Manager",
+              "Node Package Manager",
+              "New Package Module",
+              "Network Protocol Manager"
+            ],
+            "correctAnswer": "Node Package Manager",
+            "_id": "6a381be057d2a7106d4f735c"
+          }
+        ],
+        "createdAt": "2026-06-21T17:14:08.276Z",
+        "updatedAt": "2026-06-21T17:14:08.276Z",
+        "__v": 0
+      }
+    ],
+    "scores": [],
+    "notifications": []
+  }
+}

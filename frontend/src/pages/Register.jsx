@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { UserPlus, AlertCircle, Mail, Lock, User as UserIcon, Plus, X } from 'lucide-react';
+import Logo from '../components/Logo';
 
 const Register = () => {
   const { register, user } = useAuth();
@@ -11,6 +12,20 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('fresher'); // 'fresher' or 'startup'
+  const [phone, setPhone] = useState('');
+  const [location, setLocation] = useState('');
+  const [headline, setHeadline] = useState('');
+  const [bio, setBio] = useState('');
+  
+  // Basic arrays for comprehensive profile
+  const [eduDegree, setEduDegree] = useState('');
+  const [eduSchool, setEduSchool] = useState('');
+  
+  const [expTitle, setExpTitle] = useState('');
+  const [expCompany, setExpCompany] = useState('');
+  
+  const [projTitle, setProjTitle] = useState('');
+  const [certTitle, setCertTitle] = useState('');
   
   // Skill tags state for freshers
   const [skills, setSkills] = useState([]);
@@ -21,14 +36,10 @@ const Register = () => {
 
   // If user already logged in, redirect them
   useEffect(() => {
-    if (user) {
-      if (user.role === 'startup') {
-        navigate('/startup-dashboard');
-      } else {
-        navigate('/fresher-dashboard');
-      }
+    if (localStorage.getItem('token')) {
+      navigate('/dashboard');
     }
-  }, [user, navigate]);
+  }, [navigate]);
 
   const handleAddSkill = (e) => {
     e.preventDefault();
@@ -57,55 +68,79 @@ const Register = () => {
       return;
     }
 
-    setLoading(true);
-    // Send list of skills if registering as a fresher, else send empty array
-    const skillList = role === 'fresher' ? skills : [];
-    const result = await register(name, email, password, role, skillList);
-    setLoading(false);
-
-    if (!result.success) {
-      setError(result.message);
+    try {
+      setLoading(true);
+      const res = await register(
+        name,
+        email,
+        password,
+        role,
+        role === 'fresher' ? skills : [],
+        role === 'fresher' ? phone : '',
+        role === 'fresher' ? location : '',
+        role === 'fresher' ? headline : '',
+        role === 'fresher' ? bio : '',
+        role === 'fresher' && eduDegree ? [{ degree: eduDegree, school: eduSchool }] : [],
+        role === 'fresher' && expTitle ? [{ title: expTitle, company: expCompany }] : [],
+        role === 'fresher' && projTitle ? [{ title: projTitle }] : [],
+        role === 'fresher' && certTitle ? [{ title: certTitle }] : []
+      );
+      setLoading(false);
+      if (res && res.success) {
+        alert('Registration Successful!');
+        if (role === 'startup') {
+          navigate('/startup-dashboard');
+        } else {
+          navigate('/dashboard');
+        }
+      } else {
+        setError(res?.message || 'Registration failed. Try again.');
+      }
+    } catch (err) {
+      setLoading(false);
+      setError('An error occurred during registration.');
     }
   };
 
   return (
-    <div class="relative min-h-[calc(100vh-80px)] flex items-center justify-center px-4 bg-auth-pattern py-12">
+    <div className="relative min-h-[calc(100vh-80px)] flex items-center justify-center px-4 bg-auth-pattern tech-grid py-12">
       {/* Background ambient glow shapes */}
-      <div class="ambient-glow -top-20 -right-20 animate-pulse-glow"></div>
-      <div class="ambient-glow -bottom-20 -left-20 animate-pulse-glow" style={{ animationDelay: '3s' }}></div>
+      <div className="ambient-glow glow-purple -top-20 -right-20 animate-pulse-glow w-[350px] h-[350px]"></div>
+      <div className="ambient-glow glow-cyan -bottom-20 -left-20 animate-pulse-glow w-[350px] h-[350px]" style={{ animationDelay: '3s' }}></div>
 
-      <div class="w-full max-w-lg glass-panel rounded-2xl border border-white/10 p-8 shadow-2xl z-10 animate-fade-in">
+      <div className="w-full max-w-lg glass-panel rounded-2xl border border-white/10 p-8 shadow-2xl z-10 animate-fade-in">
         
         {/* Header */}
-        <div class="text-center mb-6">
-          <h2 class="text-3xl font-extrabold font-display text-white tracking-tight">
+        <div className="text-center mb-6 flex flex-col items-center">
+          <Logo size={64} showText={false} className="mb-4" />
+          <h2 className="text-3xl font-extrabold font-display text-white tracking-tight">
             Create Account
           </h2>
-          <p class="text-sm text-textSecondary mt-2">
+          <p className="text-sm text-textSecondary mt-2">
             Get started with CareerPilot today.
           </p>
         </div>
 
         {error && (
-          <div class="mb-5 px-4 py-3 bg-red-950/20 border border-red-500/20 rounded-xl text-sm text-red-400 flex items-center gap-2">
-            <AlertCircle size={18} class="shrink-0" />
+          <div className="mb-5 px-4 py-3 bg-red-950/20 border border-red-500/20 rounded-xl text-sm text-red-400 flex items-center gap-2">
+            <AlertCircle size={18} className="shrink-0" />
             <span>{error}</span>
           </div>
         )}
 
         {/* Form */}
-        <form onSubmit={handleSubmit} class="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           
           {/* Role selector buttons */}
           <div>
-            <label class="block text-xs font-semibold text-textSecondary uppercase tracking-wider mb-2 text-center">
+            <label className="block text-xs font-semibold text-textSecondary uppercase tracking-wider mb-2 text-center">
               Register As
             </label>
-            <div class="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
                 onClick={() => setRole('fresher')}
-                class={`py-2 px-4 rounded-lg font-bold text-sm border transition-all ${
+                className={`py-2 px-4 rounded-lg font-bold text-sm border transition-all ${
                   role === 'fresher'
                     ? 'bg-neonIndigo/20 border-neonIndigo text-white shadow-glow-purple'
                     : 'bg-white/5 border-white/5 text-textSecondary hover:bg-white/10'
@@ -116,7 +151,7 @@ const Register = () => {
               <button
                 type="button"
                 onClick={() => setRole('startup')}
-                class={`py-2 px-4 rounded-lg font-bold text-sm border transition-all ${
+                className={`py-2 px-4 rounded-lg font-bold text-sm border transition-all ${
                   role === 'startup'
                     ? 'bg-neonCyan/20 border-neonCyan text-white shadow-glow-cyan'
                     : 'bg-white/5 border-white/5 text-textSecondary hover:bg-white/10'
@@ -127,13 +162,13 @@ const Register = () => {
             </div>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label class="block text-xs font-semibold text-textSecondary uppercase tracking-wider mb-2">
+              <label className="block text-xs font-semibold text-textSecondary uppercase tracking-wider mb-2">
                 Full Name
               </label>
-              <div class="relative">
-                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-textSecondary pointer-events-none">
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-textSecondary pointer-events-none">
                   <UserIcon size={16} />
                 </span>
                 <input
@@ -142,18 +177,18 @@ const Register = () => {
                   placeholder="John Doe"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  class="w-full pl-10 pr-4 py-2 text-sm rounded-lg glow-input text-white"
+                  className="w-full pl-10 pr-4 py-2 text-sm rounded-lg glow-input text-white"
                   disabled={loading}
                 />
               </div>
             </div>
 
             <div>
-              <label class="block text-xs font-semibold text-textSecondary uppercase tracking-wider mb-2">
+              <label className="block text-xs font-semibold text-textSecondary uppercase tracking-wider mb-2">
                 Email Address
               </label>
-              <div class="relative">
-                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-textSecondary pointer-events-none">
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-textSecondary pointer-events-none">
                   <Mail size={16} />
                 </span>
                 <input
@@ -162,7 +197,7 @@ const Register = () => {
                   placeholder="john@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  class="w-full pl-10 pr-4 py-2 text-sm rounded-lg glow-input text-white"
+                  className="w-full pl-10 pr-4 py-2 text-sm rounded-lg glow-input text-white"
                   disabled={loading}
                 />
               </div>
@@ -170,11 +205,11 @@ const Register = () => {
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-textSecondary uppercase tracking-wider mb-2">
+            <label className="block text-xs font-semibold text-textSecondary uppercase tracking-wider mb-2">
               Password (6+ characters)
             </label>
-            <div class="relative">
-              <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-textSecondary pointer-events-none">
+            <div className="relative">
+              <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-textSecondary pointer-events-none">
                 <Lock size={16} />
               </span>
               <input
@@ -183,60 +218,132 @@ const Register = () => {
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                class="w-full pl-10 pr-4 py-2 text-sm rounded-lg glow-input text-white"
+                className="w-full pl-10 pr-4 py-2 text-sm rounded-lg glow-input text-white"
                 disabled={loading}
               />
             </div>
           </div>
 
-          {/* Interactive Skills section for Freshers */}
+          {/* Additional fields for Freshers */}
           {role === 'fresher' && (
-            <div class="p-4 rounded-xl border border-white/5 bg-white/5 animate-fade-in">
-              <label class="block text-xs font-semibold text-textSecondary uppercase tracking-wider mb-1">
-                Add Your Technical Skills (Optional)
+            <div className="space-y-4 animate-fade-in border-t border-white/5 pt-4 mt-2">
+              <label className="block text-xs font-semibold text-textSecondary uppercase tracking-wider mb-2 text-center">
+                Profile Details
               </label>
-              <p class="text-xs text-textSecondary mb-3">
+
+              <div>
+                <input
+                  type="text"
+                  placeholder="Professional Headline (e.g., Frontend Developer)"
+                  value={headline}
+                  onChange={(e) => setHeadline(e.target.value)}
+                  className="w-full px-4 py-2 text-sm rounded-lg glow-input text-white mb-4"
+                  disabled={loading}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input
+                  type="text"
+                  placeholder="Location (e.g., San Francisco, CA)"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="w-full px-4 py-2 text-sm rounded-lg glow-input text-white"
+                  disabled={loading}
+                />
+                <input
+                  type="tel"
+                  placeholder="Phone (e.g., +1 234 567 890)"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="w-full px-4 py-2 text-sm rounded-lg glow-input text-white"
+                  disabled={loading}
+                />
+              </div>
+
+              <div>
+                <textarea
+                  placeholder="About You (Bio)"
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
+                  className="w-full px-4 py-2 text-sm rounded-lg glow-input text-white mb-2"
+                  disabled={loading}
+                  rows="2"
+                />
+              </div>
+
+              {/* Education & Experience Basic */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="block text-[10px] font-semibold text-textSecondary uppercase tracking-wider">Latest Education</label>
+                  <input type="text" placeholder="Degree (e.g. BS Computer Science)" value={eduDegree} onChange={(e) => setEduDegree(e.target.value)} className="w-full px-4 py-2 text-sm rounded-lg glow-input text-white" />
+                  <input type="text" placeholder="School/University" value={eduSchool} onChange={(e) => setEduSchool(e.target.value)} className="w-full px-4 py-2 text-sm rounded-lg glow-input text-white" />
+                </div>
+                <div className="space-y-2">
+                  <label className="block text-[10px] font-semibold text-textSecondary uppercase tracking-wider">Latest Experience</label>
+                  <input type="text" placeholder="Job Title" value={expTitle} onChange={(e) => setExpTitle(e.target.value)} className="w-full px-4 py-2 text-sm rounded-lg glow-input text-white" />
+                  <input type="text" placeholder="Company Name" value={expCompany} onChange={(e) => setExpCompany(e.target.value)} className="w-full px-4 py-2 text-sm rounded-lg glow-input text-white" />
+                </div>
+              </div>
+
+              {/* Project & Cert */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="block text-[10px] font-semibold text-textSecondary uppercase tracking-wider">Top Project</label>
+                  <input type="text" placeholder="Project Name" value={projTitle} onChange={(e) => setProjTitle(e.target.value)} className="w-full px-4 py-2 text-sm rounded-lg glow-input text-white" />
+                </div>
+                <div className="space-y-2">
+                  <label className="block text-[10px] font-semibold text-textSecondary uppercase tracking-wider">Top Certificate</label>
+                  <input type="text" placeholder="Certificate Name" value={certTitle} onChange={(e) => setCertTitle(e.target.value)} className="w-full px-4 py-2 text-sm rounded-lg glow-input text-white" />
+                </div>
+              </div>
+
+              <div className="p-4 rounded-xl border border-white/5 bg-white/5">
+                <label className="block text-xs font-semibold text-textSecondary uppercase tracking-wider mb-1">
+                  Add Your Technical Skills (Optional)
+                </label>
+              <p className="text-xs text-textSecondary mb-3">
                 Adding skills helps match you with Startup listings.
               </p>
 
-              <div class="flex gap-2 mb-3">
+              <div className="flex gap-2 mb-3">
                 <input
                   type="text"
                   placeholder="e.g. React, Node, Python"
                   value={skillInput}
                   onChange={(e) => setSkillInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleAddSkill(e)}
-                  class="flex-1 px-3 py-1.5 text-xs rounded-lg glow-input text-white"
+                  className="flex-1 px-3 py-1.5 text-xs rounded-lg glow-input text-white"
                   disabled={loading}
                 />
                 <button
                   type="button"
                   onClick={handleAddSkill}
-                  class="p-2 rounded-lg bg-neonIndigo text-white hover:bg-neonPurple transition-all"
+                  className="p-2 rounded-lg bg-neonIndigo text-white hover:bg-neonPurple transition-all"
                 >
                   <Plus size={16} />
                 </button>
               </div>
 
               {/* Tag display list */}
-              <div class="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2">
                 {skills.map((skill, index) => (
                   <span
                     key={index}
-                    class="text-xs px-2.5 py-1 rounded bg-white/10 border border-white/10 text-white flex items-center gap-1.5"
+                    className="text-xs px-2.5 py-1 rounded bg-white/10 border border-white/10 text-white flex items-center gap-1.5"
                   >
                     <span>{skill}</span>
                     <button
                       type="button"
                       onClick={() => handleRemoveSkill(skill)}
-                      class="text-textSecondary hover:text-white"
+                      className="text-textSecondary hover:text-white"
                     >
                       <X size={10} />
                     </button>
                   </span>
                 ))}
                 {skills.length === 0 && (
-                  <span class="text-xs text-textSecondary italic">No skills added yet</span>
+                  <span className="text-xs text-textSecondary italic">No skills added yet</span>
                 )}
               </div>
             </div>
@@ -244,7 +351,7 @@ const Register = () => {
 
           <button
             type="submit"
-            class="w-full flex items-center justify-center space-x-2 py-3 px-4 font-bold rounded-lg text-white bg-gradient-to-r from-neonIndigo to-neonPurple hover:shadow-glow-purple transition-all duration-300 transform hover:scale-[1.01]"
+            className="w-full flex items-center justify-center space-x-2 py-3 px-4 font-bold rounded-lg text-white shimmer-btn"
             disabled={loading}
           >
             <UserPlus size={16} />
@@ -253,10 +360,10 @@ const Register = () => {
         </form>
 
         {/* Footer Link */}
-        <div class="text-center mt-6 pt-6 border-t border-white/5">
-          <p class="text-sm text-textSecondary">
+        <div className="text-center mt-6 pt-6 border-t border-white/5">
+          <p className="text-sm text-textSecondary">
             Already have an account?{' '}
-            <Link to="/login" class="text-neonCyan hover:underline font-medium">
+            <Link to="/login" className="text-neonCyan hover:underline font-medium">
               Sign in
             </Link>
           </p>
