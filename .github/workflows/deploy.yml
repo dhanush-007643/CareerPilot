@@ -6,8 +6,8 @@ on:
       - main
 
 env:
-  DOCKER_IMAGE_FRONTEND: yourdockerhub/careerpilot-frontend
-  DOCKER_IMAGE_BACKEND: yourdockerhub/careerpilot-backend
+  DOCKER_IMAGE_FRONTEND: dhaanush19/careerpilot-frontend
+  DOCKER_IMAGE_BACKEND: dhaanush19/careerpilot-backend
 
 jobs:
   build-and-test:
