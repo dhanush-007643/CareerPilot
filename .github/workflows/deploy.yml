@@ -57,39 +57,4 @@ jobs:
           push: true
           tags: ${{ env.DOCKER_IMAGE_FRONTEND }}:${{ github.sha }},${{ env.DOCKER_IMAGE_FRONTEND }}:latest
 
-  deploy-to-k8s:
-    needs: docker-build-and-push
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Source Code
-        uses: actions/checkout@v3
 
-      - name: Set up Kubectl
-        uses: azure/setup-kubectl@v3
-
-      - name: Configure Kubeconfig
-        run: |
-          mkdir -p ~/.kube
-          echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
-          chmod 600 ~/.kube/config
-
-      - name: Replace Image Tags in K8s Manifests
-        run: |
-          sed -i 's|image: .*careerpilot-backend:latest|image: ${{ env.DOCKER_IMAGE_BACKEND }}:${{ github.sha }}|g' k8s/backend-deployment.yaml
-          sed -i 's|image: .*careerpilot-frontend:latest|image: ${{ env.DOCKER_IMAGE_FRONTEND }}:${{ github.sha }}|g' k8s/frontend-deployment.yaml
-
-      - name: Deploy to Kubernetes
-        run: |
-          kubectl apply -f k8s/namespace.yaml
-          kubectl apply -f k8s/configmap.yaml
-          kubectl apply -f k8s/secret.yaml
-          kubectl apply -f k8s/backend-deployment.yaml
-          kubectl apply -f k8s/backend-service.yaml
-          kubectl apply -f k8s/frontend-deployment.yaml
-          kubectl apply -f k8s/frontend-service.yaml
-          kubectl apply -f k8s/ingress.yaml
-
-      - name: Verify Deployment
-        run: |
-          kubectl rollout status deployment/careerpilot-backend -n careerpilot --timeout=90s
-          kubectl rollout status deployment/careerpilot-frontend -n careerpilot --timeout=90s
